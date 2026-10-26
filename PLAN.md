@@ -24,7 +24,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 
 1. El niño elige un color en la paleta. Las zonas de ese color se marcan con rayas del propio color.
 2. Toca una zona y se pinta con una onda que sale del dedo, un sonido y una vibración.
-3. **Margen de toque**: si el toque cae cerca (hasta 24 px) de una zona válida, cuenta.
+3. **Margen de toque**: solo si el dedo cae sobre una raya o sobre una zona ya pintada, a 6 px como mucho (10 px en el nivel 1). Un toque dentro de otra zona sin pintar nunca pinta la de al lado.
 4. **Un fallo no se castiga**: solo hace temblar la ficha del color y parpadear las zonas que faltan.
 5. **Varita mágica ilimitada**: hace latir las zonas que faltan.
 6. Al terminar: confeti, una estrella y la repetición de cómo se pintó el dibujo.

@@ -13,8 +13,11 @@ const ICONO_VOLVER =
 const ICONO_VARITA =
   '<svg viewBox="0 0 24 24" width="30" height="30"><path d="M4 20L14 10" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M16 2l1.2 3.3L20.5 6.5l-3.3 1.2L16 11l-1.2-3.3L11.5 6.5l3.3-1.2z" fill="#ffc531" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>';
 
-/** Distancia (en píxeles de pantalla) a la que un toque todavía cuenta para una zona. */
-const TOLERANCIA = [8, 16, 24];
+/**
+ * Distancias (en píxeles de pantalla) a las que se busca la zona correcta cuando el dedo
+ * cae sobre una raya o una zona ya pintada. Nunca se usa si el toque cae dentro de otra zona.
+ */
+const TOLERANCIA = { 1: [5, 10], 2: [3, 6], 3: [3, 6] } as const;
 const MOVIMIENTO_MAX_TOQUE = 12;
 const ZOOM_MAX = 4;
 /** Hasta qué nivel una voz guía diciendo el número (y el color, en el nivel 1). */
@@ -161,6 +164,12 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   const sinPintar = (z: Zona | undefined): z is Zona => !!z && z.nivel <= nivel && !pintadas.has(z.id);
   const esCandidata = (z: Zona | undefined): z is Zona => sinPintar(z) && z.color === seleccionado;
 
+  function sobreRaya(z: Zona, x: number, y: number) {
+    const camino = caminos.get(z.id)!;
+    const ctm = camino.getScreenCTM();
+    return !!ctm && camino.isPointInStroke(new DOMPoint(x, y).matrixTransform(ctm.inverse()));
+  }
+
   function zonaEn(x: number, y: number) {
     const e = document.elementFromPoint(x, y);
     return e ? zonaDeCamino.get(e) : undefined;
@@ -170,8 +179,10 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     if (progreso.terminado) return;
     const tocada = zonaEn(x, y);
     if (esCandidata(tocada)) return pintar(tocada, x, y);
-    // Los dedos pequeños fallan por poco: probamos alrededor del toque.
-    for (const r of TOLERANCIA) {
+    // Dentro de otra zona sin pintar es un fallo: nunca se pinta la de al lado.
+    if (sinPintar(tocada) && !sobreRaya(tocada, x, y)) return fallo();
+    // Sobre una raya o una zona ya pintada: probamos muy cerca del toque.
+    for (const r of TOLERANCIA[nivel]) {
       for (let i = 0; i < 12; i++) {
         const a = (i / 12) * Math.PI * 2;
         const z = zonaEn(x + r * Math.cos(a), y + r * Math.sin(a));
