@@ -1,0 +1,509 @@
+:root {
+  --fondo: #fff6ee;
+  --superficie: #ffffff;
+  --texto: #2b2b33;
+  --suave: #8a8494;
+  --acento: #ff6b8b;
+  --acento-texto: #ffffff;
+  --sombra: 0 4px 14px rgba(80, 50, 30, 0.12);
+  --radio: 22px;
+  --ficha: 64px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --fondo: #24212b;
+    --superficie: #312d3a;
+    --texto: #f3eff7;
+    --suave: #aaa3b5;
+    --sombra: 0 4px 14px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme='dark'] {
+  --fondo: #24212b;
+  --superficie: #312d3a;
+  --texto: #f3eff7;
+  --suave: #aaa3b5;
+  --sombra: 0 4px 14px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: ui-rounded, 'SF Pro Rounded', 'Nunito', 'Varela Round', system-ui, sans-serif;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+.logo {
+  font-size: clamp(28px, 6vw, 44px);
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  background: linear-gradient(90deg, #ff6b8b, #ffb347, #4fd1a5, #4fa9e6, #b388ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.redondo {
+  width: 56px;
+  height: 56px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  font-weight: 800;
+}
+.redondo:active {
+  transform: scale(0.94);
+}
+.redondo.esquina {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  left: 16px;
+  font-size: 40px;
+  line-height: 1;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: max(12px, env(safe-area-inset-top)) 16px 8px;
+}
+.barra .logo {
+  flex: 1;
+  text-align: center;
+}
+
+/* ---------- Portada y perfiles ---------- */
+.portada {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 24px 16px;
+  text-align: center;
+  position: relative;
+}
+.portada .logo {
+  font-size: clamp(44px, 11vw, 80px);
+}
+.portada h2 {
+  font-size: clamp(22px, 5vw, 32px);
+}
+.perfiles,
+.rejilla-avatares {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+  max-width: 640px;
+}
+.tarjeta-perfil {
+  position: relative;
+}
+.perfil {
+  width: 120px;
+  height: 120px;
+  border-radius: 32px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-weight: 800;
+}
+.perfil:active {
+  transform: scale(0.95);
+}
+.perfil .avatar {
+  font-size: 60px;
+  line-height: 1;
+}
+.perfil.nuevo .avatar {
+  font-size: 48px;
+  color: var(--acento);
+}
+.estrellas {
+  color: #ffb000;
+  font-size: 18px;
+}
+.borrar {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e5484d;
+  color: #fff;
+  font-size: 20px;
+}
+.avatar.grande {
+  font-size: 110px;
+  line-height: 1;
+}
+.rejilla-edades {
+  display: grid;
+  grid-template-columns: repeat(4, 84px);
+  gap: 16px;
+}
+.edad {
+  height: 84px;
+  border-radius: 26px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  font-size: 40px;
+  font-weight: 900;
+}
+.edad:active {
+  transform: scale(0.95);
+}
+.enlace-padres {
+  background: none;
+  color: var(--suave);
+  font-size: 16px;
+  padding: 12px;
+  text-decoration: underline;
+}
+
+/* ---------- Biblioteca ---------- */
+.biblioteca {
+  min-height: 100%;
+}
+.nivel {
+  color: #ffb000;
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+.idioma {
+  font-size: 18px;
+}
+.avatar-boton {
+  font-size: 34px;
+}
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 18px;
+  padding: 12px 16px 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.tarjeta {
+  position: relative;
+  background: #ffffff;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 10px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tarjeta:active {
+  transform: scale(0.97);
+}
+.tarjeta .miniatura {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  display: block;
+}
+.tarjeta .nombre {
+  font-weight: 800;
+  font-size: 18px;
+  color: #2b2b33;
+}
+.sello {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  font-size: 40px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+}
+
+/* ---------- Pintar ---------- */
+.pintar {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+.pintar .barra {
+  justify-content: space-between;
+}
+.avatar-mini {
+  font-size: 34px;
+}
+.pista {
+  color: #6b4bb5;
+}
+.lienzo {
+  position: relative;
+  min-height: 0;
+  padding: 8px 16px;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+}
+/* Ocupa todo el hueco disponible sin deformar el dibujo (--proporcion = ancho / alto). */
+.lamina {
+  width: min(100cqw, 100cqh * var(--proporcion, 1));
+  height: min(100cqh, 100cqw / var(--proporcion, 1));
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: var(--sombra);
+  overflow: hidden;
+}
+.zona {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.zona.latido {
+  animation: latido 0.5s ease-in-out 3;
+}
+@keyframes latido {
+  50% {
+    opacity: 0.35;
+  }
+}
+.zona.aparece {
+  animation: aparece 0.3s ease-out;
+}
+@keyframes aparece {
+  from {
+    opacity: 0.2;
+  }
+}
+.etiquetas {
+  pointer-events: none;
+  font-weight: 800;
+  fill: #4a4652;
+  transition: opacity 0.3s;
+}
+.etiquetas .oculta,
+.etiquetas.oculta {
+  opacity: 0;
+}
+
+.paleta {
+  display: flex;
+  gap: 14px;
+  padding: 12px 16px max(16px, env(safe-area-inset-bottom));
+  overflow-x: auto;
+  scrollbar-width: none;
+  justify-content: safe center;
+}
+.paleta::-webkit-scrollbar {
+  display: none;
+}
+.ficha {
+  position: relative;
+  flex: none;
+  width: var(--ficha);
+  height: var(--ficha);
+  border-radius: 50%;
+  background: var(--color);
+  color: var(--texto);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12), var(--sombra);
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  font-weight: 900;
+  transition: transform 0.2s;
+}
+.ficha.activa {
+  transform: scale(1.18);
+}
+.ficha .anillo {
+  position: absolute;
+  inset: -7px;
+  width: calc(100% + 14px);
+  height: calc(100% + 14px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+.ficha .anillo circle {
+  fill: none;
+  stroke: #6b4bb5;
+  stroke-width: 3;
+  stroke-dasharray: 0 100;
+  transition: stroke-dasharray 0.3s;
+  opacity: 0;
+}
+.ficha.activa .anillo circle {
+  opacity: 1;
+}
+.ficha .hecho {
+  display: none;
+}
+.ficha.completa {
+  opacity: 0.45;
+  transform: scale(0.85);
+}
+.ficha.completa .numero {
+  display: none;
+}
+.ficha.completa .hecho {
+  display: block;
+}
+.ficha.meneo {
+  animation: meneo 0.4s;
+}
+@keyframes meneo {
+  25% {
+    transform: scale(1.18) rotate(-12deg);
+  }
+  75% {
+    transform: scale(1.18) rotate(12deg);
+  }
+}
+
+@media (max-width: 440px) {
+  :root {
+    --ficha: 54px;
+  }
+  .paleta {
+    gap: 12px;
+  }
+}
+
+@media (orientation: landscape) and (min-width: 600px) {
+  :root {
+    --ficha: 58px;
+  }
+  .pintar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .pintar .barra {
+    grid-column: 1 / -1;
+  }
+  .paleta {
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 12px max(20px, env(safe-area-inset-right)) 16px 12px;
+    justify-content: safe center;
+  }
+}
+
+/* ---------- Final y diálogos ---------- */
+.confeti {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+.final {
+  position: absolute;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 2;
+  width: min(92vw, 440px);
+  background: var(--superficie);
+  border-radius: 28px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  text-align: center;
+  animation: sube 0.4s ease-out;
+}
+@keyframes sube {
+  from {
+    transform: translate(-50%, 40px);
+    opacity: 0;
+  }
+}
+.estrella-final {
+  font-size: 56px;
+  line-height: 1;
+}
+.final h2 {
+  margin: 6px 0 4px;
+  font-size: 28px;
+}
+.sube {
+  color: #ff8a00;
+  font-weight: 900;
+  font-size: 20px;
+  margin: 4px 0;
+}
+.botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.boton {
+  min-height: 56px;
+  padding: 0 22px;
+  border-radius: 28px;
+  background: var(--fondo);
+  font-weight: 800;
+  font-size: 18px;
+  box-shadow: var(--sombra);
+}
+.boton.principal {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+.velo {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 15, 30, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 10;
+  padding: 16px;
+}
+.dialogo {
+  background: var(--superficie);
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  max-width: 380px;
+  font-size: 20px;
+  font-weight: 700;
+}
