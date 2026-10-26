@@ -8,7 +8,7 @@ export const pez: Dibujo = {
   ancho: 400,
   alto: 400,
   //        mar        arena      alga       cola       cuerpo     blanco     pupila     burbuja    estrella
-  paleta: ['#4fa9e6', '#f3dca2', '#47b36b', '#ff7a2f', '#ffb347', '#ffffff', '#33363d', '#c9ecfb', '#ff8fa3'],
+  paleta: ['#4fa9e6', '#f3dca2', '#47b36b', '#ff7a2f', '#ffc93c', '#ffffff', '#33363d', '#c9ecfb', '#ff8fa3'],
   zonas: [
     { id: 'mar', d: 'M0 0H400V400H0Z', color: 0, nivel: 1, etiqueta: [200, 50] },
     { id: 'arena', d: 'M0 340Q100 318 200 338T400 332V400H0Z', color: 1, nivel: 1, etiqueta: [110, 372] },

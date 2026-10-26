@@ -6,6 +6,7 @@ import { registrarDibujoTerminado, type Perfil } from '../perfiles';
 import { cargarProgreso, guardarProgreso, zonasJugables } from '../progreso';
 import { boing, colorCompleto, fanfarria, pop, vibrar } from '../sonido';
 import type { Dibujo, Zona } from '../tipos';
+import { decir, nombreColor, nombreNumero } from '../voz';
 
 const ICONO_VOLVER =
   '<svg viewBox="0 0 24 24" width="30" height="30"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -16,6 +17,8 @@ const ICONO_VARITA =
 const TOLERANCIA = [8, 16, 24];
 const MOVIMIENTO_MAX_TOQUE = 12;
 const ZOOM_MAX = 4;
+/** Hasta qué nivel una voz guía diciendo el número (o el color, en el nivel 1). */
+const NIVEL_MAX_VOZ = 2;
 
 export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo, alSalir: () => void) {
   const nivel = perfil.nivel;
@@ -24,6 +27,8 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   const colores = [...new Set(jugables.map((z) => z.color))].sort((a, b) => a - b);
   const numero = new Map(colores.map((c, i) => [c, i + 1]));
   const tamBase = Math.round(dibujo.ancho / 24);
+  const nombreFicha = (c: number) => (modoPuntos ? nombreColor(dibujo.paleta[c]) : nombreNumero(numero.get(c)!));
+  const guiar = (c: number) => nivel <= NIVEL_MAX_VOZ && decir(nombreFicha(c));
 
   const progreso = cargarProgreso(perfil.id, dibujo, nivel);
   const pintadas = new Set(progreso.orden);
@@ -96,7 +101,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     const ficha = el('button', { class: 'ficha', type: 'button' });
     ficha.style.setProperty('--color', hex);
     ficha.style.setProperty('--texto', textoSobre(hex));
-    ficha.setAttribute('aria-label', `${t('nivel')} ${numero.get(c)}`);
+    ficha.setAttribute('aria-label', nombreFicha(c));
     ficha.innerHTML =
       `<svg class="anillo" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20" pathLength="100"/></svg>` +
       `<span class="numero">${modoPuntos ? '' : numero.get(c)}</span><span class="hecho">✓</span>`;
@@ -120,6 +125,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     refrescarDibujo();
     refrescarPaleta();
     fichas.get(c)?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    guiar(c);
   }
 
   // ---------- Pantalla ----------
@@ -137,6 +143,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   refrescarDibujo();
   refrescarPaleta();
   if (progreso.terminado) setTimeout(() => celebrar(false), 300);
+  else guiar(seleccionado);
 
   // ---------- Pintar ----------
   const sinPintar = (z: Zona | undefined): z is Zona => !!z && z.nivel <= nivel && !pintadas.has(z.id);
@@ -209,6 +216,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     progreso.fallos++;
     guardarProgreso(perfil.id, dibujo, nivel, progreso);
     boing();
+    guiar(seleccionado);
     destacar();
     const ficha = fichas.get(seleccionado)!;
     ficha.classList.remove('meneo');
@@ -234,6 +242,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     }
     if (escala > 1) restablecerCamara();
     destacar();
+    guiar(seleccionado);
   }
 
   function terminar() {
