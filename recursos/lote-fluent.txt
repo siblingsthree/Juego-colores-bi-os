@@ -1,0 +1,21 @@
+# Dibujos generados a partir de Fluent Emoji de Microsoft (licencia MIT).
+# carpeta en el repositorio | archivo | id | nombre es | nombre en | categoría | edad | fondo | densidad
+# Vidrieras: densidad 0,4 ≈ 80 cristales en el nivel 4; 1 ≈ 200; 1,4 ≈ 290.
+Lady beetle|lady_beetle_flat.svg|mariquita|La mariquita|The ladybug|animales|3|#e9f9e0|0.4
+Strawberry|strawberry_flat.svg|fresa|La fresa|The strawberry|naturaleza|3|#fff1f1|0.4
+Rainbow|rainbow_flat.svg|arcoiris|El arcoíris|The rainbow|naturaleza|3|#e8f6ff|0.4
+Unicorn|unicorn_flat.svg|unicornio|El unicornio|The unicorn|fantasia|5|#f3e6ff|0.6
+Octopus|octopus_flat.svg|pulpo|El pulpo|The octopus|animales|5|#d9f2ff|0.6
+Dolphin|dolphin_flat.svg|delfin|El delfín|The dolphin|animales|5|#fff1d6|0.6
+Sunflower|sunflower_flat.svg|girasol|El girasol|The sunflower|naturaleza|5|#e3f3ff|0.6
+Automobile|automobile_flat.svg|coche|El coche|The car|vehiculos|5|#eef3f8|0.6
+Owl|owl_flat.svg|buho|El búho|The owl|animales|7|#e8e0ff|1
+Lion|lion_flat.svg|leon|El león|The lion|animales|7|#fff4cc|1
+Sauropod|sauropod_flat.svg|dinosaurio|El dinosaurio|The dinosaur|animales|7|#fff2dd|1
+Castle|castle_flat.svg|castillo|El castillo|The castle|lugares|7|#dff3ff|1
+Fire engine|fire_engine_flat.svg|bomberos|El camión de bomberos|The fire engine|vehiculos|7|#fff7e0|1
+Fox|fox_flat.svg|zorro-vidriera|El zorro de cristal|The glass fox|animales|7|#dbeeff|1
+Whale|whale_flat.svg|ballena-vidriera|La ballena de cristal|The glass whale|animales|7|#ffe9c7|1
+Tropical fish|tropical_fish_flat.svg|pez-tropical|El pez tropical|The tropical fish|animales|9|#dff4ff|1.3
+Dragon|dragon_flat.svg|dragon|El dragón|The dragon|fantasia|9|#fff0d9|1.3
+Peacock|peacock_flat.svg|pavo-real|El pavo real|The peacock|animales|10|#eaf7f0|1.4

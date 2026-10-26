@@ -4,8 +4,9 @@ import type { Dibujo } from '../../tipos';
 export const tortugaFoto: Dibujo = {
   id: 'tortuga-foto',
   nombre: { es: 'La tortuga 3D', en: '3D turtle' },
-  categoria: 'fotos',
+  categoria: 'animales',
   edad: 5,
+  credito: 'Fluent Emoji © Microsoft Corporation (MIT)',
   ancho: 400,
   alto: 400,
   paleta: ['#e3f4ff', '#63ac9d', '#6bc065', '#44988f', '#a7caba', '#bae85e', '#a0c445', '#8b9340', '#a5b05a', '#baae7f'],

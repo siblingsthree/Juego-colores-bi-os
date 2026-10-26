@@ -1,4 +1,6 @@
 import { borrarTodo } from '../almacen';
+import { creditos } from '../creditos';
+import { dibujos } from '../dibujos';
 import { el } from '../dom';
 import { cambiarIdioma, idiomaActual, t } from '../i18n';
 import { AVATARES, EDADES, actualizarPerfil, borrarPerfil, borrarProgreso, nivelPorEdad, type Perfil } from '../perfiles';
@@ -83,6 +85,8 @@ export function bloqueAjustes(raiz: HTMLElement, alCambiar: () => void) {
       location.reload();
     }),
   );
+  const verCreditos = el('button', { class: 'boton', type: 'button' }, t('creditos'));
+  verCreditos.addEventListener('click', () => panelCreditos(raiz));
   return el(
     'div',
     { class: 'ajustes-generales' },
@@ -100,6 +104,21 @@ export function bloqueAjustes(raiz: HTMLElement, alCambiar: () => void) {
         alCambiar();
       }),
     ),
+    verCreditos,
     restablecer,
   );
+}
+
+/** Autoría de los dibujos que salen de fuentes libres, con el texto de su licencia. */
+function panelCreditos(raiz: HTMLElement) {
+  const listo = el('button', { class: 'boton principal', type: 'button' }, t('listo'));
+  const contenido = el('div', { class: 'creditos' }, el('h2', {}, t('creditos')), el('p', {}, t('creditosApp')));
+  for (const { credito, ids, licencia } of creditos()) {
+    const nombres = ids.map((id) => dibujos.find((d) => d.id === id)!.nombre[idiomaActual()]).join(', ');
+    contenido.append(el('h3', {}, credito), el('p', {}, `${t('creditosDibujos')}: ${nombres}.`));
+    if (licencia) contenido.append(el('pre', {}, licencia));
+  }
+  const capa = el('div', { class: 'velo' }, el('div', { class: 'dialogo panel-creditos' }, contenido, listo));
+  listo.addEventListener('click', () => capa.remove());
+  raiz.append(capa);
 }

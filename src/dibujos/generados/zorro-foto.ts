@@ -4,8 +4,9 @@ import type { Dibujo } from '../../tipos';
 export const zorroFoto: Dibujo = {
   id: 'zorro-foto',
   nombre: { es: 'El zorro 3D', en: '3D fox' },
-  categoria: 'fotos',
+  categoria: 'animales',
   edad: 7,
+  credito: 'Fluent Emoji © Microsoft Corporation (MIT)',
   ancho: 400,
   alto: 400,
   paleta: ['#e8f1e4', '#df908c', '#feae5b', '#f26c2f', '#fe9341', '#fc822c', '#fecc9d', '#4a3138', '#c7572d', '#deafb2', '#664f4e'],

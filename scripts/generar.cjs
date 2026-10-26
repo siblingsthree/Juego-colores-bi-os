@@ -8,7 +8,7 @@
 // foto:     la imagen se reduce a K colores y cada mancha de color es una zona; las manchas
 //           pequeñas se reparten entre los niveles altos (ya pintadas en los bajos).
 //
-// Opciones: --fondo=#rrggbb  --colores=12 (solo foto)  --credito="texto"  --salida=ruta.ts
+// Opciones: --fondo=#rrggbb  --colores=12 (solo foto)  --densidad=1 (solo vidriera)  --credito="texto"  --salida=ruta.ts
 // Escribe src/dibujos/generados/<id>.ts. Necesita Playwright (ya instalado en el entorno).
 
 const { chromium } = require('playwright');
@@ -21,10 +21,19 @@ const TOLERANCIA_SIMPLIFICAR = 1.2; // píxeles: cuánto se puede desviar el con
 
 // Área (en píxeles) por celda de cada nivel en modo vidriera.
 const AREA_CELDA = { 1: 36000, 2: 14000, 3: 6500, 4: 3200 };
+// --densidad: 1 = normal (~200 cristales en el nivel 4); 0,5 = la mitad de cristales en cada nivel.
+let DENSIDAD = 1;
 const MAX_HIJOS = 6;
 // Zonas más pequeñas que esto se funden con una vecina.
 const AREA_MINIMA = 600;
 const RADIO_MINIMO = 6;
+// La línea negra del juego mide 2,6 unidades = 5,2 px a esta escala: se come unos 3 px de cada borde.
+const MEDIA_LINEA = 4; // 3 px de línea + 1 px que puede desviarse el contorno simplificado
+// Restos más pequeños que esto quedan escondidos bajo la línea y no cuentan como trozo.
+const RESTO_MINIMO = 25;
+// Lo que se ve de una pieza tras la línea negra debe medir al menos esto (igual que en
+// scripts/comprobar-zonas.cjs, que lo comprueba a la misma escala de 800 px).
+const VISIBLE_MINIMO = 150;
 
 // ---------- utilidades de color ----------
 
@@ -166,6 +175,32 @@ function repartir(pixeles, dentro, semillas, destino) {
  * Reparte el conjunto entre las semillas fijas y las candidatas, quitando candidatas hasta que
  * ningún trozo sea más fino que la línea negra del juego. Devuelve las semillas que quedan.
  */
+/**
+ * Lo que queda de una pieza cuando la línea negra del juego se come su borde: debe ser un solo
+ * trozo. Si la pieza tiene un cuello más estrecho que la línea, queda partida en dos.
+ */
+function seVeEntera(pixeles, dentro) {
+  const dist = distanciaAlBorde(pixeles, dentro);
+  const nucleo = new Set(pixeles.filter((p) => dist.get(p) > MEDIA_LINEA));
+  if (!nucleo.size) return false;
+  let trozos = 0, mayor = 0;
+  const visto = new Set();
+  for (const p0 of nucleo) {
+    if (visto.has(p0)) continue;
+    let tam = 0;
+    const pila = [p0];
+    visto.add(p0);
+    while (pila.length) {
+      const p = pila.pop();
+      tam++;
+      vecinos(p, (q) => { if (nucleo.has(q) && !visto.has(q)) { visto.add(q); pila.push(q); } });
+    }
+    if (tam >= RESTO_MINIMO) trozos++;
+    mayor = Math.max(mayor, tam);
+  }
+  return trozos === 1 && mayor >= VISIBLE_MINIMO;
+}
+
 function repartirSinFinos(pixeles, dentro, fijas, candidatas, destino) {
   const umbral = RADIO_MINIMO + 1;
   for (;;) {
@@ -173,10 +208,14 @@ function repartirSinFinos(pixeles, dentro, fijas, candidatas, destino) {
     repartir(pixeles, dentro, semillas, destino);
     const porSemilla = new Map(semillas.map((s) => [s.id, []]));
     for (const p of pixeles) porSemilla.get(destino[p]).push(p);
+    // La peor pieza: primero las que la línea negra partiría; si no hay, la más estrecha.
     let fina = null, radioMin = Infinity;
     for (const s of semillas) {
-      const { radio } = masInterior(porSemilla.get(s.id), (q) => destino[q] === s.id);
-      if (radio < radioMin) { radioMin = radio; fina = s; }
+      const dentroDe = (q) => destino[q] === s.id;
+      const pieza = porSemilla.get(s.id);
+      const { radio } = masInterior(pieza, dentroDe);
+      const nota = seVeEntera(pieza, dentroDe) ? radio : -1;
+      if (nota < radioMin) { radioMin = nota; fina = s; }
     }
     if (radioMin >= umbral || !candidatas.length) return semillas;
     if (candidatas.includes(fina)) candidatas = candidatas.filter((s) => s !== fina);
@@ -356,6 +395,9 @@ function generarVidriera(px, fills, fondo) {
     etiqueta[p] = mejor;
   }
   fusionarPequenas(etiqueta, (c) => c.pixeles.length < AREA_MINIMA);
+  // Quita cuellos e hilos de las manchas de color, que la línea negra partiría.
+  abrir(etiqueta, RADIO_MINIMO);
+  fusionarPequenas(etiqueta, (c) => c.pixeles.length < AREA_MINIMA);
 
   const { comp, lista } = componentes(etiqueta);
   const semillas = []; // { id, p, nivel, padre, color }
@@ -371,7 +413,7 @@ function generarVidriera(px, fills, fondo) {
     marca++;
     for (const p of c.pixeles) pertenece[p] = marca;
     const dentro = (q) => pertenece[q] === marca;
-    const k = Math.max(1, Math.min(8, Math.round(c.pixeles.length / AREA_CELDA[1])));
+    const k = Math.max(1, Math.min(8, Math.round((c.pixeles.length * DENSIDAD) / AREA_CELDA[1])));
     const puntos = elegirSemillas(c.pixeles, dentro, k);
     const primera = { id: siguienteId++, p: puntos[0], nivel: 1, padre: -1, color: c.etiqueta };
     const otras = puntos.slice(1).map((p) => ({ id: siguienteId++, p, nivel: 1, padre: -1, color: c.etiqueta }));
@@ -385,7 +427,7 @@ function generarVidriera(px, fills, fondo) {
       marca++;
       for (const p of c.pixeles) pertenece[p] = marca;
       const dentro = (q) => pertenece[q] === marca;
-      const k = Math.max(1, Math.min(MAX_HIJOS, Math.round(c.pixeles.length / AREA_CELDA[nivel])));
+      const k = Math.max(1, Math.min(MAX_HIJOS, Math.round((c.pixeles.length * DENSIDAD) / AREA_CELDA[nivel])));
       const puntos = elegirSemillas(c.pixeles, dentro, k, [madre.p]);
       const hijas = puntos.slice(1).map((p) => ({ id: siguienteId++, p, nivel, padre: madre.id, color: madre.color }));
       registrar(repartirSinFinos(c.pixeles, dentro, [madre], hijas, niveles[nivel]).slice(1));
@@ -502,6 +544,7 @@ async function principal() {
   }
   const op = Object.fromEntries(resto.map((a) => { const [k, ...v] = a.replace(/^--/, '').split('='); return [k, v.join('=')]; }));
   const fondo = op.fondo ?? (modo === 'vidriera' ? '#dbeeff' : '#ffffff');
+  if (op.densidad) DENSIDAD = +op.densidad;
 
   const r = await rasterizar(entrada, modo, fondo);
   W = r.W; H = r.H; N = W * H;

@@ -1,3 +1,5 @@
+import { escribir, leer } from '../almacen';
+import { TODAS, categoriasPresentes, nombreCategoria } from '../categorias';
 import { dibujos } from '../dibujos';
 import { el } from '../dom';
 import { cambiarIdioma, idiomaActual, t } from '../i18n';
@@ -26,8 +28,21 @@ export function pantallaBiblioteca(
     pantallaBiblioteca(raiz, perfil, alElegir, alCambiarPerfil);
   });
 
+  let categoria = leer('categoria', TODAS);
+  const categorias = [TODAS, ...categoriasPresentes(dibujos.map((d) => d.categoria))];
+  if (!categorias.includes(categoria)) categoria = TODAS;
+  const pestanas = el('nav', { class: 'pestanas' });
+  for (const c of categorias) {
+    const b = el('button', { class: c === categoria ? 'activa' : '', type: 'button' }, nombreCategoria(c));
+    b.addEventListener('click', () => {
+      escribir('categoria', c);
+      pantallaBiblioteca(raiz, perfil, alElegir, alCambiarPerfil);
+    });
+    pestanas.append(b);
+  }
+
   const rejilla = el('div', { class: 'rejilla' });
-  for (const d of dibujos) {
+  for (const d of dibujos.filter((d) => categoria === TODAS || d.categoria === categoria)) {
     const progreso = cargarProgreso(perfil.id, d, perfil.nivel);
     const tarjeta = el(
       'button',
@@ -53,6 +68,7 @@ export function pantallaBiblioteca(
         idioma,
         sonido,
       ),
+      pestanas,
       rejilla,
     ),
   );

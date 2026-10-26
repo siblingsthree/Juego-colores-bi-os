@@ -38,6 +38,9 @@ const textos = {
     avisoRestablecer: 'Se borrarán todos los perfiles, todos los dibujos y los ajustes. No se puede deshacer.',
     borrarTodo: 'Borrar todo',
     borrar: 'Borrar',
+    creditos: 'Créditos',
+    creditosApp: 'Colorines es gratis y sin anuncios. Algunos dibujos están hechos a partir de ilustraciones libres:',
+    creditosDibujos: 'Dibujos',
     pronto: 'Muy pronto',
   },
   en: {
@@ -76,6 +79,9 @@ const textos = {
     avisoRestablecer: 'All profiles, pictures and settings will be deleted. This cannot be undone.',
     borrarTodo: 'Delete everything',
     borrar: 'Delete',
+    creditos: 'Credits',
+    creditosApp: 'Colorines is free and ad-free. Some pictures are based on free illustrations:',
+    creditosDibujos: 'Pictures',
     pronto: 'Coming soon',
   },
 } satisfies Record<Idioma, Record<string, string>>;

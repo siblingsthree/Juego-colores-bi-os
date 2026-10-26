@@ -51,17 +51,21 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 - Al cambiar los iconos, sube el número `?v=` de los enlaces en `index.html`: Safari guarda los iconos y si no, sigue usando los viejos.
 - Si cambia el nombre definitivo, hay que cambiarlo en `src/i18n.ts`, `index.html`, el manifest y `capacitor.config.ts`.
 
-## Dibujos actuales
+## Dibujos actuales (26)
 
-| Dibujo | Edad | Zonas por nivel (1 / 2 / 3 / 4) |
+| Grupo | Dibujos | Zonas en el nivel 4 |
 |---|---|---|
-| Pez, casa, cohete | 3+ | 4–7 / 8–14 / 13–19 / igual que el 3 |
-| Tortuga | 5+ | 5 / 21 / 32 / 40 |
-| Mariposa | 7+ | 8 / 19 / 37 / 53 |
-| Mandala | 10+ | 7 / 24 / 62 / 90 |
-| Zorro de cristal (generado, vidriera) | 7+ | 20 / 50 / 95 / 201 |
-| Ballena de cristal (generado, vidriera) | 7+ | 16 / 43 / 95 / 199 |
-| Tortuga 3D y Zorro 3D (generados, foto) | 5+ / 7+ | 6 / 10 / 21 / 25 y 7 / 9 / 19 / 37 |
+| Hechos a mano | Pez, casa, cohete (3+), tortuga (5+), mariposa (7+), mandala (10+) | 14–90 |
+| Vidrieras para 3+ | Mariquita, fresa, arcoíris | ~80 |
+| Vidrieras para 5+ | Unicornio, pulpo, delfín, girasol, coche | ~120–130 |
+| Vidrieras para 7+ | Búho, león, dinosaurio, castillo, camión de bomberos, zorro, ballena | ~200 |
+| Vidrieras para 9–10 | Pez tropical, dragón, pavo real | 250–290 |
+| Fotos (Fluent 3D) | Tortuga 3D (5+), zorro 3D (7+) | 25–37 |
+
+- La biblioteca tiene pestañas por categoría (Todo, Animales, Naturaleza, Fantasía, Vehículos, Lugares, Mandalas) y recuerda la última elegida. Dentro de cada una, los dibujos van ordenados por edad.
+- Las vidrieras salen de `recursos/lote-fluent.txt` con `bash scripts/lote-fluent.sh`: para añadir un dibujo, se añade una línea (carpeta de Fluent Emoji, nombres, categoría, edad, fondo y densidad) y se vuelve a ejecutar.
+- **Créditos**: la licencia MIT de Fluent Emoji obliga a incluir su aviso y su texto. Están en "Para padres" → Créditos, generados a partir del campo `credito` de cada dibujo.
+- **Nada de personajes con derechos**: los de Disney siguen protegidos en España (70 años desde la muerte del autor: el Mickey de 1928 hasta 2042) y además son marca registrada.
 
 ## Generador de dibujos (`scripts/generar.cjs`)
 
@@ -73,8 +77,8 @@ npm run comprobar   # siempre después de generar
 
 - **vidriera**: cada mancha de color del SVG se trocea en cristales con un frente de onda desde semillas bien repartidas. Los cristales se subdividen por niveles (1: ~20, 4: ~200) y los de niveles altos son zonas `oculta`, de modo que en el nivel 1 se pinta el cristal grande entero. Cada color base da hasta 3 tonos.
 - **foto**: suavizado, K medias de color (solo sobre el sujeto si el PNG tiene transparencia), manchas conexas, fusión de las manchas pequeñas o finas, apertura morfológica para quitar hilos que la línea negra taparía. El nivel de cada mancha sale de su tamaño.
-- Ambos: contorno vectorial con agujeros, simplificado a 1,2 px; número en el punto más interior de la parte visible; se descarta toda pieza más fina que 12 px (6 unidades), que es lo mínimo que un dedo puede pintar.
-- La salida va a `src/dibujos/generados/<id>.ts` y hay que añadirla a `src/dibujos/index.ts`.
+- Ambos: contorno vectorial con agujeros, simplificado a 1,2 px; número en el punto más interior de la parte visible; se descarta toda pieza más fina que 12 px (6 unidades), que es lo mínimo que un dedo puede pintar, y toda pieza que la línea negra partiría por un cuello estrecho o dejaría con menos de 150 px visibles (el mismo umbral que el comprobador).
+- La salida va a `src/dibujos/generados/<id>.ts` y entra sola en la biblioteca.
 - Pendiente: probar el modo foto con fotos reales (Unsplash, Pexels). Desde el entorno de desarrollo en la nube esas webs están bloqueadas; los dos de muestra salen de PNG 3D de Fluent Emoji, que tienen poco detalle.
 
 ## Fuentes de dibujos libres

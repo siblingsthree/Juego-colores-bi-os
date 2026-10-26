@@ -1,13 +1,17 @@
 import type { Dibujo } from '../tipos';
-import { ballenaVidriera } from './generados/ballena-vidriera';
 import { casa } from './casa';
 import { cohete } from './cohete';
-import { tortugaFoto } from './generados/tortuga-foto';
-import { zorroFoto } from './generados/zorro-foto';
-import { zorroVidriera } from './generados/zorro-vidriera';
 import { mandala } from './mandala';
 import { mariposa } from './mariposa';
 import { pez } from './pez';
 import { tortuga } from './tortuga';
 
-export const dibujos: Dibujo[] = [pez, casa, cohete, tortuga, mariposa, mandala, zorroVidriera, ballenaVidriera, tortugaFoto, zorroFoto];
+// Todo lo que genere scripts/generar.cjs entra solo en la biblioteca.
+const generados = Object.values(import.meta.glob<Record<string, Dibujo>>('./generados/*.ts', { eager: true })).flatMap(
+  (modulo) => Object.values(modulo),
+);
+
+const hechosAMano: Dibujo[] = [pez, casa, cohete, tortuga, mariposa, mandala];
+
+/** Ordenados por edad recomendada: lo más sencillo primero. */
+export const dibujos: Dibujo[] = [...hechosAMano, ...generados].sort((a, b) => a.edad - b.edad);

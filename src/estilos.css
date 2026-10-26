@@ -692,3 +692,66 @@ h2 {
   color: var(--suave);
   opacity: 0.7;
 }
+
+/* ---------- Pestañas de categorías ---------- */
+.pestanas {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px max(16px, env(safe-area-inset-left, 0px)) 8px max(16px, env(safe-area-inset-right, 0px));
+}
+.pestanas::-webkit-scrollbar {
+  display: none;
+}
+.pestanas button {
+  flex: none;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 22px;
+  background: var(--superficie);
+  box-shadow: var(--sombra);
+  font-size: 17px;
+  font-weight: 800;
+}
+.pestanas button.activa {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+/* ---------- Créditos ---------- */
+.panel-creditos {
+  width: min(100%, 560px);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 500;
+}
+.creditos {
+  overflow-y: auto;
+  min-height: 0;
+}
+.creditos h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.creditos h3 {
+  font-size: 16px;
+  margin: 12px 0 4px;
+}
+.creditos p {
+  margin: 0 0 8px;
+}
+.creditos pre {
+  white-space: pre-wrap;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--suave);
+  background: var(--fondo);
+  border-radius: 12px;
+  padding: 10px;
+  margin: 0;
+}
