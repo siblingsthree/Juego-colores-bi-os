@@ -61,3 +61,8 @@ npm run dev       # servidor local, accesible desde la tablet en la misma red
 npm run build     # dist/index.html autocontenido
 npx cap add ios && npx cap add android   # cuando toque la fase 4
 ```
+
+## Publicación web
+
+Cada cambio en `main` se compila y se publica en la rama `gh-pages`
+(`.github/workflows/publicar.yml`): https://siblingsthree.github.io/Juego-colores-bi-os/
