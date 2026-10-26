@@ -5,7 +5,7 @@ const path = require('path');
 
 const LADO = 800;
 const GROSOR = 2.6; // igual que GROSOR_LINEA en src/miniatura.ts
-const MINIMO = 40; // píxeles: trozos menores son restos del suavizado de bordes
+const MINIMO = 150; // píxeles (a 800 px de lado): trozos menores quedan bajo la línea negra
 
 (async () => {
   const navegador = await chromium.launch();
@@ -14,7 +14,13 @@ const MINIMO = 40; // píxeles: trozos menores son restos del suavizado de borde
   const problemas = await pagina.evaluate(async ({ LADO, MINIMO, GROSOR }) => {
     const { dibujos } = window.__colorines;
     const salida = [];
-    for (const d of dibujos) {
+    // Un dibujo con zonas ocultas se ve distinto en cada nivel: se comprueban los cuatro.
+    const casos = dibujos.flatMap((d) =>
+      d.zonas.some((z) => z.oculta) ? [1, 2, 3, 4].map((nivel) => ({ d, nivel })) : [{ d, nivel: 4 }],
+    );
+    for (const { d: dibujo, nivel } of casos) {
+      const visibles = dibujo.zonas.filter((z) => !(z.oculta && z.nivel > nivel));
+      const d = { ...dibujo, zonas: visibles, id: nivel === 4 && visibles.length === dibujo.zonas.length ? dibujo.id : `${dibujo.id}@nivel${nivel}` };
       const svg =
         `<svg xmlns="http://www.w3.org/2000/svg" width="${LADO}" height="${LADO}" viewBox="0 0 ${d.ancho} ${d.alto}" shape-rendering="crispEdges">` +
         // Las líneas negras (r = g = 0) separan zonas igual que en el juego.

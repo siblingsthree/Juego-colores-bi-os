@@ -68,7 +68,7 @@ export const mariposa: Dibujo = {
     { id: 'raya2', d: elipse(200, 220, 7, 6), color: 10, nivel: 4, etiqueta: [200, 220], tam: 7 },
     { id: 'raya3', d: elipse(200, 244, 7, 6), color: 10, nivel: 4, etiqueta: [200, 244], tam: 7 },
     { id: 'cabeza', d: circulo(200, 145, 17), color: 8, nivel: 1, etiqueta: [200, 154], tam: 9 },
-    circ('ojo', 193, 141, 4, 11, 4),
-    circ('ojo-d', 207, 141, 4, 11, 4),
+    circ('ojo', 192, 140, 5, 11, 4),
+    circ('ojo-d', 208, 140, 5, 11, 4),
   ],
 };

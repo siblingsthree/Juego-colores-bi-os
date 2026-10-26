@@ -10,7 +10,9 @@ export function miniatura(dibujo: Dibujo, nivel: Nivel, pintadas: Iterable<strin
   return svg(
     'svg',
     { viewBox: `0 0 ${dibujo.ancho} ${dibujo.alto}`, class: 'miniatura', 'aria-hidden': 'true' },
-    ...dibujo.zonas.map((z) =>
+    ...dibujo.zonas
+      .filter((z) => !(z.oculta && z.nivel > nivel))
+      .map((z) =>
       svg('path', {
         d: z.d,
         fill: z.nivel > nivel || hechas.has(z.id) ? dibujo.paleta[z.color] : '#ffffff',

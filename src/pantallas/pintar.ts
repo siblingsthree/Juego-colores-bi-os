@@ -63,6 +63,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   const zonaDeCamino = new Map<Element, Zona>();
 
   for (const z of dibujo.zonas) {
+    if (z.oculta && z.nivel > nivel) continue;
     const camino = svg('path', {
       d: z.d,
       stroke: COLOR_LINEA,
@@ -94,7 +95,8 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   }
 
   function colorearZona(z: Zona) {
-    const camino = caminos.get(z.id)!;
+    const camino = caminos.get(z.id);
+    if (!camino) return;
     const fija = z.nivel > nivel;
     if (fija || pintadas.has(z.id)) camino.setAttribute('fill', dibujo.paleta[z.color]);
     else camino.setAttribute('fill', z.color === seleccionado ? 'url(#trama)' : '#ffffff');

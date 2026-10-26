@@ -15,6 +15,11 @@ export interface Zona {
   etiqueta: [number, number];
   /** Tamaño del número; por defecto el del dibujo. */
   tam?: number;
+  /**
+   * En niveles inferiores al suyo, la zona no se dibuja (en lugar de aparecer ya pintada).
+   * Sirve para subdividir una zona grande en trozos que solo existen en los niveles altos.
+   */
+  oculta?: boolean;
 }
 
 export interface Dibujo {
@@ -23,6 +28,8 @@ export interface Dibujo {
   categoria: string;
   /** Edad recomendada a partir de la que el dibujo luce entero (todas sus zonas). */
   edad: number;
+  /** Autoría de la imagen de origen, cuando su licencia obliga a citarla. */
+  credito?: string;
   ancho: number;
   alto: number;
   paleta: string[];

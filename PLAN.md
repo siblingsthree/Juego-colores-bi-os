@@ -12,7 +12,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 | Niveles | 1 (3–4 años): números dentro de un punto de su color, solo zonas grandes. 2 (5–6), 3 (7–8) y 4 (9–10): cada vez más zonas y más pequeñas. Es solo el nivel inicial: los padres lo cambian en "Para padres" |
 | Subir de nivel | Automático tras 3 dibujos seguidos terminados con 2 fallos o menos |
 | Idiomas | Español + inglés |
-| Dibujos | Generados con IA y retocados, a través de la herramienta de dibujos (fase 1) |
+| Dibujos | Tres vías: (1) **vidrieras** generadas por código a partir de siluetas libres, (2) **fotos** libres reducidas a manchas de color, (3) ilustración con IA retocada. Las tres pasan por `scripts/generar.cjs` y por el comprobador |
 | Dispositivos | Tablet y móvil, en vertical y horizontal |
 | Datos | Solo en el dispositivo. Sin servidor ni analítica de terceros |
 | Enfoque | Diversión y creatividad. El aprendizaje formal está en nuestra otra app, Bosque de letras |
@@ -50,6 +50,23 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 | Tortuga | 5+ | 5 / 21 / 32 / 40 |
 | Mariposa | 7+ | 8 / 19 / 37 / 53 |
 | Mandala | 10+ | 7 / 24 / 62 / 90 |
+| Zorro de cristal (generado, vidriera) | 7+ | 20 / 50 / 95 / 201 |
+| Ballena de cristal (generado, vidriera) | 7+ | 16 / 43 / 95 / 199 |
+| Tortuga 3D y Zorro 3D (generados, foto) | 5+ / 7+ | 6 / 10 / 21 / 25 y 7 / 9 / 19 / 37 |
+
+## Generador de dibujos (`scripts/generar.cjs`)
+
+```bash
+node scripts/generar.cjs vidriera imagen.svg zorro-vidriera "El zorro de cristal" "Glass fox" vidrieras 7
+node scripts/generar.cjs foto     imagen.png  zorro-foto     "El zorro 3D"         "3D fox"    fotos     7 --fondo=#e8f1e4 --colores=12
+npm run comprobar   # siempre después de generar
+```
+
+- **vidriera**: cada mancha de color del SVG se trocea en cristales con un frente de onda desde semillas bien repartidas. Los cristales se subdividen por niveles (1: ~20, 4: ~200) y los de niveles altos son zonas `oculta`, de modo que en el nivel 1 se pinta el cristal grande entero. Cada color base da hasta 3 tonos.
+- **foto**: suavizado, K medias de color (solo sobre el sujeto si el PNG tiene transparencia), manchas conexas, fusión de las manchas pequeñas o finas, apertura morfológica para quitar hilos que la línea negra taparía. El nivel de cada mancha sale de su tamaño.
+- Ambos: contorno vectorial con agujeros, simplificado a 1,2 px; número en el punto más interior de la parte visible; se descarta toda pieza más fina que 12 px (6 unidades), que es lo mínimo que un dedo puede pintar.
+- La salida va a `src/dibujos/generados/<id>.ts` y hay que añadirla a `src/dibujos/index.ts`.
+- Pendiente: probar el modo foto con fotos reales (Unsplash, Pexels). Desde el entorno de desarrollo en la nube esas webs están bloqueadas; los dos de muestra salen de PNG 3D de Fluent Emoji, que tienen poco detalle.
 
 ## Fuentes de dibujos libres
 
@@ -68,7 +85,7 @@ Para los niveles 3–4 hacen falta dibujos con mucho más detalle. Son candidata
 | Fase | Contenido | Estado |
 |---|---|---|
 | 0. Prototipo | Pantalla de pintar, perfiles, biblioteca, 3 niveles, 3 dibujos hechos a mano, sonido, ES/EN | **Hecho** |
-| 1. Herramienta de dibujos | Pasar un dibujo en PNG a JSON: detectar zonas, unir las pequeñas, avisar de líneas abiertas, sacar la paleta de una referencia coloreada, pasar a vectores (potrace), colocar números (polylabel) y página de revisión | Pendiente |
+| 1. Herramienta de dibujos | `scripts/generar.cjs` (vidriera y foto) y `npm run comprobar`. Falta el modo para dibujos de línea de IA: detectar zonas cerradas, avisar de líneas abiertas y tomar la paleta de una referencia coloreada | **En marcha** |
 | 2. Contenido y MVP | 30–50 dibujos en 5–6 categorías, voces grabadas ES/EN, PWA sin conexión, mejor celebración | Pendiente |
 | 3. Pulido | Pegatinas, paletas para daltonismo, accesibilidad, zona de padres completa, pruebas con niños | Pendiente |
 | 4. Tiendas | Capacitor (iOS/Android), iconos, fichas, política de privacidad, categoría Kids (Apple) y Families (Google) | Pendiente |
