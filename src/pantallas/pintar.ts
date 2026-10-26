@@ -1,5 +1,5 @@
 import { lanzarConfeti } from '../confeti';
-import { el, svg, textoSobre } from '../dom';
+import { aclarar, el, svg, textoSobre } from '../dom';
 import { t } from '../i18n';
 import { COLOR_LINEA, GROSOR_LINEA } from '../miniatura';
 import { registrarDibujoTerminado, type Perfil } from '../perfiles';
@@ -45,12 +45,14 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   let seleccionado = colores.find((c) => restantes(c).length > 0) ?? colores[0];
 
   // ---------- Dibujo ----------
-  const rayaTrama = svg('rect', { width: 5, height: 12 });
+  // Zonas que faltan del color elegido: fondo teñido con ese color y rayas oscuras de contraste,
+  // que se ven igual sobre colores claros y entre zonas ya pintadas de tonos parecidos.
+  const fondoTrama = svg('rect', { width: 12, height: 12 });
   const trama = svg(
     'pattern',
     { id: 'trama', width: 12, height: 12, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' },
-    svg('rect', { width: 12, height: 12, fill: '#ffffff' }),
-    rayaTrama,
+    fondoTrama,
+    svg('rect', { width: 4, height: 12, fill: COLOR_LINEA, 'fill-opacity': 0.45 }),
   );
   const defs = svg('defs', {}, trama);
   const capaZonas = svg('g');
@@ -104,9 +106,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   }
 
   function refrescarDibujo() {
-    rayaTrama.setAttribute('fill', dibujo.paleta[seleccionado]);
-    rayaTrama.setAttribute('fill-opacity', dibujo.paleta[seleccionado] === '#ffffff' ? '0' : '0.4');
-    trama.firstElementChild!.setAttribute('fill', dibujo.paleta[seleccionado] === '#ffffff' ? '#e3e7ee' : '#ffffff');
+    fondoTrama.setAttribute('fill', aclarar(dibujo.paleta[seleccionado], 0.45));
     dibujo.zonas.forEach(colorearZona);
   }
 

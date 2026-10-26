@@ -22,7 +22,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 
 ## Cómo funciona el juego
 
-1. El niño elige un color en la paleta. Las zonas de ese color se marcan con rayas del propio color.
+1. El niño elige un color en la paleta. Las zonas que faltan de ese color se tiñen con él y llevan rayas oscuras de contraste, visibles sobre cualquier color.
 2. Toca una zona y se pinta con una onda que sale del dedo, un sonido y una vibración.
 3. **Margen de toque**: solo si el dedo cae sobre una raya o sobre una zona ya pintada, a 6 px como mucho (10 px en el nivel 1). Un toque dentro de otra zona sin pintar nunca pinta la de al lado.
 4. **Un fallo no se castiga**: solo hace temblar la ficha del color y parpadear las zonas que faltan.

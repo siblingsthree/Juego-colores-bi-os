@@ -32,3 +32,10 @@ export function textoSobre(hex: string) {
   const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
   return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#2b2b33' : '#ffffff';
 }
+
+/** Mezcla un color con blanco: 0 lo deja igual, 1 lo vuelve blanco. */
+export function aclarar(hex: string, k: number) {
+  const n = parseInt(hex.slice(1), 16);
+  const canal = (v: number) => Math.round(v + (255 - v) * k).toString(16).padStart(2, '0');
+  return '#' + canal((n >> 16) & 255) + canal((n >> 8) & 255) + canal(n & 255);
+}
