@@ -53,6 +53,22 @@ function matiz(h, k) {
   return hex(r + (m - r) * f, g + (m - g) * f, b + (m - b) * f);
 }
 
+// Tonos de cada color en las vidrieras, según el nivel del cristal. El del nivel 4 se ajusta
+// en cada dibujo para llegar a unos COLORES_NIVEL_4 colores en total (de 5 a 8 tonos por color).
+const TONOS_POR_NIVEL = { 1: 1, 2: 2, 3: 3, 4: 5 };
+const COLORES_NIVEL_4 = 28;
+
+/** Ocho tonos distinguibles de un color: los oscuros solo se aclaran y los claros solo se oscurecen. */
+function tonosDeColor(base) {
+  const [r, g, b] = deHex(base);
+  const luz = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  const pasos =
+    luz < 0.22 ? [0.15, 0.28, 0.4, 0.52, 0.62, 0.72, 0.8]
+    : luz > 0.85 ? [-0.08, -0.16, -0.24, -0.32, -0.4, -0.48, -0.56]
+    : [0.24, -0.18, 0.42, -0.33, 0.56, -0.45, 0.68];
+  return [base, ...pasos.map((k) => matiz(base, k))];
+}
+
 // ---------- rasterizar con el navegador ----------
 
 async function rasterizar(ruta, modo, fondo) {
@@ -439,16 +455,22 @@ function generarVidriera(px, fills, fondo) {
   for (const capa of niveles.slice(1)) for (let p = 0; p < N; p++) capa[p] = nuevoId.get(capa[p]);
   semillas.forEach((s, i) => { s.id = i; s.padre = s.padre < 0 ? -1 : nuevoId.get(s.padre); });
 
-  // Paleta: cada color base en hasta 3 tonos.
-  const bases = [...new Set(semillas.map((s) => s.color))];
-  const tonos = bases.length * 3 <= 12 ? 3 : bases.length * 2 <= 12 ? 2 : 1;
-  const paleta = [];
-  const indice = new Map();
-  for (const b of bases) {
-    const base = b === 0 ? fondo : fills[b - 1];
-    const variantes = [base, matiz(base, 0.28), matiz(base, -0.22)].slice(0, tonos);
-    variantes.forEach((v, i) => { indice.set(`${b}:${i}`, paleta.length); paleta.push(v); });
-  }
+  // Paleta: cada color de la silueta se abre en más tonos cuanto más alto es el nivel del cristal,
+  // así los pequeños tienen pocos colores y los mayores muchos más números (también en el fondo).
+  const tonosDe = (b) => tonosDeColor(b === 0 ? fondo : fills[b - 1]);
+  const bases = new Set(semillas.map((s) => s.color)).size;
+  TONOS_POR_NIVEL[4] = Math.min(8, Math.max(5, Math.ceil(COLORES_NIVEL_4 / bases)));
+  const usados = new Map(); // "base:tono" -> color
+  // Reparto pseudoaleatorio pero fijo del tono de cada cristal (vale para cualquier número de tonos;
+  // un simple id × 7 daría siempre el mismo tono cuando hay 7).
+  const tonoDe = (s) => (Math.imul(s.id + 1, 2654435761) >>> 0) % TONOS_POR_NIVEL[s.nivel];
+  for (const s of semillas) usados.set(`${s.color}:${tonoDe(s)}`, tonosDe(s.color)[tonoDe(s)]);
+  const claves = [...usados.keys()].sort((a, b) => {
+    const [ba, ta] = a.split(':').map(Number), [bb, tb] = b.split(':').map(Number);
+    return ba - bb || ta - tb;
+  });
+  const paleta = claves.map((k) => usados.get(k));
+  const indice = new Map(claves.map((k, i) => [k, i]));
 
   const porNivel = [null, componentes(niveles[1]).lista, componentes(niveles[2]).lista, componentes(niveles[3]).lista, componentes(niveles[4]).lista];
   const zonas = [];
@@ -458,7 +480,7 @@ function generarVidriera(px, fills, fondo) {
     const d = trazado(union.pixeles, (q) => niveles[s.nivel][q] === s.id);
     const { etiqueta: et, tam, radio } = etiquetaDe(propia.pixeles, (q) => niveles[4][q] === s.id);
     if (radio < 2.5) console.warn(`  aviso: la zona ${s.id} es muy estrecha (radio ${radio.toFixed(1)})`);
-    const zona = { id: `z${s.id}`, d, color: indice.get(`${s.color}:${(s.id * 7) % tonos}`), nivel: s.nivel, etiqueta: et, tam, area: union.pixeles.length };
+    const zona = { id: `z${s.id}`, d, color: indice.get(`${s.color}:${tonoDe(s)}`), nivel: s.nivel, etiqueta: et, tam, area: union.pixeles.length };
     if (s.nivel > 1) zona.oculta = true;
     zonas.push(zona);
   }

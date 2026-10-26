@@ -75,7 +75,7 @@ node scripts/generar.cjs foto     imagen.png  zorro-foto     "El zorro 3D"      
 npm run comprobar   # siempre después de generar
 ```
 
-- **vidriera**: cada mancha de color del SVG se trocea en cristales con un frente de onda desde semillas bien repartidas. Los cristales se subdividen por niveles (1: ~20, 4: ~200) y los de niveles altos son zonas `oculta`, de modo que en el nivel 1 se pinta el cristal grande entero. Cada color base da hasta 3 tonos.
+- **vidriera**: cada mancha de color del SVG se trocea en cristales con un frente de onda desde semillas bien repartidas. Los cristales se subdividen por niveles (1: ~20, 4: ~200) y los de niveles altos son zonas `oculta`, de modo que en el nivel 1 se pinta el cristal grande entero. Cada color de la silueta se abre en más tonos según el nivel del cristal (1, 2, 3 y, en el nivel 4, los necesarios para llegar a unos 28 colores, de 5 a 8 por color): los pequeños tienen 3–11 colores y los de 9–10 años, 15–27.
 - **foto**: suavizado, K medias de color (solo sobre el sujeto si el PNG tiene transparencia), manchas conexas, fusión de las manchas pequeñas o finas, apertura morfológica para quitar hilos que la línea negra taparía. El nivel de cada mancha sale de su tamaño.
 - Ambos: contorno vectorial con agujeros, simplificado a 1,2 px; número en el punto más interior de la parte visible; se descarta toda pieza más fina que 12 px (6 unidades), que es lo mínimo que un dedo puede pintar, y toda pieza que la línea negra partiría por un cuello estrecho o dejaría con menos de 150 px visibles (el mismo umbral que el comprobador).
 - La salida va a `src/dibujos/generados/<id>.ts` y entra sola en la biblioteca.
