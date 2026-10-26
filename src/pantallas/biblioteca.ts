@@ -5,7 +5,7 @@ import { miniatura } from '../miniatura';
 import type { Perfil } from '../perfiles';
 import { cargarProgreso, zonasJugables } from '../progreso';
 import { alternarSonido, sonidoActivo } from '../sonido';
-import type { Dibujo } from '../tipos';
+import { NIVEL_MAXIMO, type Dibujo } from '../tipos';
 
 export function pantallaBiblioteca(
   raiz: HTMLElement,
@@ -33,7 +33,7 @@ export function pantallaBiblioteca(
       { class: 'tarjeta', type: 'button' },
       miniatura(d, perfil.nivel, progreso.orden),
       zonasJugables(d, perfil.nivel).every((z) => progreso.orden.includes(z.id)) ? el('span', { class: 'sello' }, '⭐') : null,
-      el('span', { class: 'nombre' }, d.nombre[idiomaActual()]),
+      el('span', { class: 'nombre' }, d.nombre[idiomaActual()], el('span', { class: 'edad-dibujo' }, `${d.edad}+`)),
     );
     tarjeta.addEventListener('click', () => alElegir(d));
     rejilla.append(tarjeta);
@@ -48,7 +48,7 @@ export function pantallaBiblioteca(
         { class: 'barra' },
         quien,
         el('h1', { class: 'logo' }, t('titulo')),
-        el('span', { class: 'nivel', ariaLabel: `${t('nivel')} ${perfil.nivel}` }, '★'.repeat(perfil.nivel) + '☆'.repeat(3 - perfil.nivel)),
+        el('span', { class: 'nivel', ariaLabel: `${t('nivel')} ${perfil.nivel}` }, '★'.repeat(perfil.nivel) + '☆'.repeat(NIVEL_MAXIMO - perfil.nivel)),
         idioma,
         sonido,
       ),

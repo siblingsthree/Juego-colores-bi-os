@@ -17,7 +17,7 @@ const ICONO_VARITA =
  * Distancias (en píxeles de pantalla) a las que se busca la zona correcta cuando el dedo
  * cae sobre una raya o una zona ya pintada. Nunca se usa si el toque cae dentro de otra zona.
  */
-const TOLERANCIA = { 1: [5, 10], 2: [3, 6], 3: [3, 6] } as const;
+const TOLERANCIA = { 1: [5, 10], 2: [3, 6], 3: [3, 6], 4: [3, 6] } as const;
 const MOVIMIENTO_MAX_TOQUE = 12;
 const ZOOM_MAX = 4;
 /** Hasta qué nivel una voz guía diciendo el número (y el color, en el nivel 1). */
@@ -283,6 +283,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
       lanzarConfeti(pantalla);
     }
     const repetir = el('button', { class: 'boton', type: 'button' }, t('verComo'));
+    const deNuevo = el('button', { class: 'boton', type: 'button' }, t('pintarOtraVez'));
     const otro = el('button', { class: 'boton principal', type: 'button' }, t('otro'));
     const tarjeta = el(
       'div',
@@ -290,10 +291,14 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
       el('div', { class: 'estrella-final' }, '⭐'),
       el('h2', {}, t('muyBien')),
       sube ? el('p', { class: 'sube' }, `${t('subeNivel')} ${'★'.repeat(perfil.nivel)}`) : null,
-      el('div', { class: 'botones' }, repetir, otro),
+      el('div', { class: 'botones' }, repetir, deNuevo, otro),
     );
     pantalla.append(tarjeta);
     otro.addEventListener('click', alSalir);
+    deNuevo.addEventListener('click', () => {
+      guardarProgreso(perfil.id, dibujo, perfil.nivel, { orden: [], fallos: 0, terminado: false });
+      pantallaPintar(raiz, perfil, dibujo, alSalir);
+    });
     repetir.addEventListener('click', () => {
       tarjeta.remove();
       repeticion().then(() => pantalla.append(tarjeta));

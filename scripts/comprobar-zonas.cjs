@@ -17,8 +17,8 @@ const MINIMO = 40; // píxeles: trozos menores son restos del suavizado de borde
     for (const d of dibujos) {
       const svg =
         `<svg xmlns="http://www.w3.org/2000/svg" width="${LADO}" height="${LADO}" viewBox="0 0 ${d.ancho} ${d.alto}" shape-rendering="crispEdges">` +
-        // Las líneas negras (r = 0) separan zonas igual que en el juego.
-        d.zonas.map((z, i) => `<path d="${z.d}" fill="rgb(${(i + 1) * 9},0,0)" stroke="#000" stroke-width="${GROSOR}" stroke-linejoin="round"/>`).join('') +
+        // Las líneas negras (r = g = 0) separan zonas igual que en el juego.
+        d.zonas.map((z, i) => `<path d="${z.d}" fill="rgb(${((i + 1) % 28) * 9},${Math.floor((i + 1) / 28) * 9},0)" stroke="#000" stroke-width="${GROSOR}" stroke-linejoin="round"/>`).join('') +
         '</svg>';
       const img = new Image();
       img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
@@ -30,21 +30,24 @@ const MINIMO = 40; // píxeles: trozos menores son restos del suavizado de borde
       const px = c.getImageData(0, 0, LADO, LADO).data;
       const zona = new Int16Array(LADO * LADO).fill(-1);
       for (let p = 0; p < LADO * LADO; p++) {
-        const r = px[p * 4];
-        if (r % 9 === 0 && r > 0) zona[p] = r / 9 - 1;
+        // Cada zona lleva su número en los canales rojo y verde (hasta 28 × 28 zonas).
+        const r = px[p * 4], g = px[p * 4 + 1], b = px[p * 4 + 2];
+        if (b === 0 && r % 9 === 0 && g % 9 === 0 && r + g > 0) zona[p] = r / 9 + (g / 9) * 28 - 1;
       }
       const visto = new Uint8Array(LADO * LADO);
-      const trozos = d.zonas.map(() => 0);
+      const trozos = d.zonas.map(() => []);
       for (let p = 0; p < LADO * LADO; p++) {
         if (visto[p] || zona[p] < 0) continue;
         const z = zona[p];
         let tam = 0;
+        let [x0, y0, x1, y1] = [LADO, LADO, 0, 0];
         const pila = [p];
         visto[p] = 1;
         while (pila.length) {
           const q = pila.pop();
           tam++;
           const x = q % LADO, y = (q / LADO) | 0;
+          [x0, y0, x1, y1] = [Math.min(x0, x), Math.min(y0, y), Math.max(x1, x), Math.max(y1, y)];
           for (const [nx, ny] of [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]) {
             if (nx < 0 || ny < 0 || nx >= LADO || ny >= LADO) continue;
             const n = ny * LADO + nx;
@@ -54,10 +57,13 @@ const MINIMO = 40; // píxeles: trozos menores son restos del suavizado de borde
             }
           }
         }
-        if (tam >= MINIMO) trozos[z]++;
+        // Caja del trozo en coordenadas del dibujo, para poder localizarlo.
+        const k = d.ancho / LADO;
+        if (tam >= MINIMO) trozos[z].push(`(${Math.round(x0 * k)},${Math.round(y0 * k)})-(${Math.round(x1 * k)},${Math.round(y1 * k)})`);
       }
       d.zonas.forEach((z, i) => {
-        if (trozos[i] !== 1) salida.push(`${d.id}/${z.id}: ${trozos[i] === 0 ? 'no se ve' : trozos[i] + ' trozos'}`);
+        const t = trozos[i];
+        if (t.length !== 1) salida.push(`${d.id}/${z.id}: ${t.length === 0 ? 'no se ve' : `${t.length} trozos en ${t.join(' ')}`}`);
       });
     }
     return salida;

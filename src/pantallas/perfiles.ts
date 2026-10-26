@@ -1,7 +1,7 @@
 import { el } from '../dom';
 import { t } from '../i18n';
 import { AVATARES, EDADES, actualizarPerfil, borrarPerfil, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
-import type { Nivel } from '../tipos';
+import { NIVELES } from '../tipos';
 import { panelMasApps } from './masApps';
 import { puertaPadres } from './padres';
 
@@ -22,7 +22,7 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
           dibujar();
         });
         const niveles = el('div', { class: 'elegir-nivel' });
-        for (const n of [1, 2, 3] as Nivel[]) {
+        for (const n of NIVELES) {
           const b = el('button', { class: n === p.nivel ? 'activo' : '', type: 'button', ariaLabel: `${t('nivel')} ${n}` }, '★'.repeat(n));
           b.addEventListener('click', () => {
             actualizarPerfil({ ...p, nivel: n, racha: 0 });

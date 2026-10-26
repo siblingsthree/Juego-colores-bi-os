@@ -5,6 +5,7 @@ export const cohete: Dibujo = {
   id: 'cohete',
   nombre: { es: 'El cohete', en: 'The rocket' },
   categoria: 'vehiculos',
+  edad: 3,
   ancho: 400,
   alto: 400,
   //        espacio    planeta    manchas    estrella   llama      rojo       cuerpo     cristal    marco

@@ -1,5 +1,5 @@
 import { borrar, escribir, leer } from './almacen';
-import type { Nivel } from './tipos';
+import { NIVEL_MAXIMO, type Nivel } from './tipos';
 
 // Perfiles locales: solo un animal y la edad. Nada sale del dispositivo.
 
@@ -19,7 +19,7 @@ const FALLOS_PERMITIDOS = 2;
 const RACHA_PARA_SUBIR = 3;
 
 /** Nivel inicial; los padres pueden cambiarlo y el juego lo sube solo. */
-export const nivelPorEdad = (edad: number): Nivel => (edad <= 4 ? 1 : edad <= 6 ? 2 : 3);
+export const nivelPorEdad = (edad: number): Nivel => (edad <= 4 ? 1 : edad <= 6 ? 2 : edad <= 8 ? 3 : 4);
 
 export const listarPerfiles = () => leer<Perfil[]>('perfiles', []);
 
@@ -46,7 +46,7 @@ export function borrarPerfil(perfil: Perfil) {
 export function registrarDibujoTerminado(perfil: Perfil, fallos: number): boolean {
   perfil.racha = fallos <= FALLOS_PERMITIDOS ? perfil.racha + 1 : 0;
   let sube = false;
-  if (perfil.racha >= RACHA_PARA_SUBIR && perfil.nivel < 3) {
+  if (perfil.racha >= RACHA_PARA_SUBIR && perfil.nivel < NIVEL_MAXIMO) {
     perfil.nivel = (perfil.nivel + 1) as Nivel;
     perfil.racha = 0;
     sube = true;

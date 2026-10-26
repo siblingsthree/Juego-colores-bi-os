@@ -9,7 +9,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 |---|---|
 | Tecnología | TypeScript + Vite. Web instalable y Capacitor para App Store y Google Play |
 | Edades | 3–10 años, por niveles. Un perfil por niño (animal + edad) |
-| Niveles | 1 (3–4 años): números dentro de un punto de su color, solo zonas grandes. 2 (5–6): más zonas. 3 (7–10): todas las zonas. Es solo el nivel inicial: los padres lo cambian en "Para padres" |
+| Niveles | 1 (3–4 años): números dentro de un punto de su color, solo zonas grandes. 2 (5–6), 3 (7–8) y 4 (9–10): cada vez más zonas y más pequeñas. Es solo el nivel inicial: los padres lo cambian en "Para padres" |
 | Subir de nivel | Automático tras 3 dibujos seguidos terminados con 2 fallos o menos |
 | Idiomas | Español + inglés |
 | Dibujos | Generados con IA y retocados, a través de la herramienta de dibujos (fase 1) |
@@ -27,7 +27,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 3. **Margen de toque**: solo si el dedo cae sobre una raya o sobre una zona ya pintada, a 6 px como mucho (10 px en el nivel 1). Un toque dentro de otra zona sin pintar nunca pinta la de al lado.
 4. **Un fallo no se castiga**: solo hace temblar la ficha del color y parpadear las zonas que faltan.
 5. **Varita mágica ilimitada**: hace latir las zonas que faltan.
-6. Al terminar: confeti, una estrella y la repetición de cómo se pintó el dibujo.
+6. Al terminar: confeti, una estrella, la repetición de cómo se pintó el dibujo y la opción de pintarlo otra vez.
 7. El progreso se guarda en cada toque.
 
 ## Formato de un dibujo
@@ -41,6 +41,15 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 - `nivel` es el nivel mínimo en el que la zona se pinta. En niveles inferiores aparece ya pintada. Así un mismo dibujo sirve para los 3 niveles.
 - `etiqueta` es el punto donde va el número o el punto de color.
 - **Regla**: cada zona tiene que verse como **un solo trozo**. Si una forma queda partida por otra que va encima (por ejemplo, el cuerpo de un pez cortado por sus rayas), cada trozo debe ser una zona distinta. `npm run comprobar` lo verifica en todos los dibujos y avisa también de las zonas que quedan totalmente tapadas.
+
+## Dibujos actuales
+
+| Dibujo | Edad | Zonas por nivel (1 / 2 / 3 / 4) |
+|---|---|---|
+| Pez, casa, cohete | 3+ | 4–7 / 8–14 / 13–19 / igual que el 3 |
+| Tortuga | 5+ | 5 / 21 / 32 / 40 |
+| Mariposa | 7+ | 8 / 19 / 37 / 53 |
+| Mandala | 10+ | 7 / 24 / 62 / 90 |
 
 ## Fases
 

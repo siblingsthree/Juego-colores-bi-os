@@ -22,6 +22,7 @@ export const pez: Dibujo = {
   id: 'pez',
   nombre: { es: 'El pez', en: 'The fish' },
   categoria: 'animales',
+  edad: 3,
   ancho: 400,
   alto: 400,
   //        mar        arena      alga       cola       cuerpo     blanco     pupila     burbuja    estrella

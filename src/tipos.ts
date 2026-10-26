@@ -1,4 +1,6 @@
-export type Nivel = 1 | 2 | 3;
+export type Nivel = 1 | 2 | 3 | 4;
+export const NIVELES: Nivel[] = [1, 2, 3, 4];
+export const NIVEL_MAXIMO: Nivel = 4;
 export type Idioma = 'es' | 'en';
 
 export interface Zona {
@@ -19,6 +21,8 @@ export interface Dibujo {
   id: string;
   nombre: Record<Idioma, string>;
   categoria: string;
+  /** Edad recomendada a partir de la que el dibujo luce entero (todas sus zonas). */
+  edad: number;
   ancho: number;
   alto: number;
   paleta: string[];

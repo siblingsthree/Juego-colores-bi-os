@@ -1,14 +1,11 @@
 import type { Dibujo } from '../tipos';
-import { circulo, poligono, rect } from './formas';
-
-const nube = (x: number, y: number, e = 1) =>
-  `M${x} ${y}a${22 * e} ${22 * e} 0 0 1 ${30 * e} ${-26 * e}a${30 * e} ${30 * e} 0 0 1 ${54 * e} ${-4 * e}` +
-  `a${22 * e} ${22 * e} 0 0 1 ${16 * e} ${40 * e}Z`;
+import { circulo, nube, poligono, rect } from './formas';
 
 export const casa: Dibujo = {
   id: 'casa',
   nombre: { es: 'La casita', en: 'Little house' },
   categoria: 'lugares',
+  edad: 3,
   ancho: 400,
   alto: 400,
   //        cielo      sol        blanco     césped     camino     pared      tejado     marrón     ventana    hojas      flor
