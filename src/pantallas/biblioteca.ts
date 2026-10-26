@@ -1,6 +1,7 @@
 import { dibujos } from '../dibujos';
 import { el } from '../dom';
 import { cambiarIdioma, idiomaActual, t } from '../i18n';
+import { marca } from '../marca';
 import { miniatura } from '../miniatura';
 import type { Perfil } from '../perfiles';
 import { cargarProgreso, zonasJugables } from '../progreso';
@@ -47,7 +48,7 @@ export function pantallaBiblioteca(
         'header',
         { class: 'barra' },
         quien,
-        el('h1', { class: 'logo' }, t('titulo')),
+        marca(true),
         el('span', { class: 'nivel', ariaLabel: `${t('nivel')} ${perfil.nivel}` }, '★'.repeat(perfil.nivel) + '☆'.repeat(NIVEL_MAXIMO - perfil.nivel)),
         idioma,
         sonido,

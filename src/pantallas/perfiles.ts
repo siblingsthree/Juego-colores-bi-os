@@ -1,4 +1,5 @@
 import { el } from '../dom';
+import { marca } from '../marca';
 import { t } from '../i18n';
 import { AVATARES, EDADES, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
 import { bloqueAjustes, pantallaEditarPerfil } from './ajustes';
@@ -42,7 +43,7 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
       el(
         'main',
         { class: 'portada' },
-        el('h1', { class: 'logo' }, t('titulo')),
+        marca(),
         el('h2', {}, t('quienJuega')),
         lista,
         modoPadres ? bloqueAjustes(raiz, dibujar) : null,
@@ -69,7 +70,7 @@ function pantallaNuevoPerfil(raiz: HTMLElement, alElegir: (p: Perfil) => void, a
     });
     animales.append(b);
   }
-  raiz.replaceChildren(el('main', { class: 'portada' }, volver, el('h1', { class: 'logo' }, t('titulo')), el('h2', {}, t('elegirAnimal')), animales));
+  raiz.replaceChildren(el('main', { class: 'portada' }, volver, marca(), el('h2', {}, t('elegirAnimal')), animales));
 
   function pasoEdad() {
     const edades = el('div', { class: 'rejilla-edades' });

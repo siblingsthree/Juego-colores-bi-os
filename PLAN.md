@@ -42,6 +42,13 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 - `etiqueta` es el punto donde va el número o el punto de color.
 - **Regla**: cada zona tiene que verse como **un solo trozo**. Si una forma queda partida por otra que va encima (por ejemplo, el cuerpo de un pez cortado por sus rayas), cada trozo debe ser una zona distinta. `npm run comprobar` lo verifica en todos los dibujos y avisa también de las zonas que quedan totalmente tapadas.
 
+## Logo e iconos
+
+- Fuente única: `recursos/logo.svg`, una paleta de pintor con un pocillo rayado en rojo y un "1", igual que las zonas por pintar del juego.
+- `npm run iconos` genera desde ella el favicon (SVG y 32 px), el icono de iPhone/iPad (180 px), los de Android (192, 512 y *maskable* 512) y `recursos/icono-1024.png` para las tiendas.
+- `public/manifest.webmanifest` permite instalar la web como app ("Añadir a pantalla de inicio"), a pantalla completa.
+- Si cambia el nombre definitivo, hay que cambiarlo en `src/i18n.ts`, `index.html`, el manifest y `capacitor.config.ts`.
+
 ## Dibujos actuales
 
 | Dibujo | Edad | Zonas por nivel (1 / 2 / 3 / 4) |

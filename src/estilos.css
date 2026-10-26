@@ -652,3 +652,41 @@ h2 {
   background: #e5484d;
   color: #ffffff;
 }
+
+/* ---------- Marca ---------- */
+.marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.logo-icono {
+  display: block;
+  width: clamp(96px, 26vw, 150px);
+  aspect-ratio: 1;
+  filter: drop-shadow(0 6px 10px rgba(80, 50, 30, 0.18));
+}
+.logo-icono svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.marca.pequena {
+  flex: 1;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+.marca.pequena .logo-icono {
+  width: 40px;
+  filter: none;
+}
+.marca.pequena .logo {
+  flex: none;
+}
+/* En móvil no caben el nombre, las estrellas y los botones: basta con el icono. */
+@media (max-width: 520px) {
+  .marca.pequena .logo {
+    display: none;
+  }
+}
