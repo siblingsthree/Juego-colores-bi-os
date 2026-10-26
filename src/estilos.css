@@ -303,11 +303,6 @@ h2 {
   fill: #4a4652;
   transition: opacity 0.3s;
 }
-.etiquetas > * {
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(var(--reduccion, 1));
-}
 .etiquetas .oculta,
 .etiquetas.oculta {
   opacity: 0;

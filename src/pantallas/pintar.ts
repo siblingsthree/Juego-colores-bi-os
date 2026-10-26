@@ -76,6 +76,8 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
 
   const caminos = new Map<string, SVGPathElement>();
   const etiquetas = new Map<string, SVGElement>();
+  /** Tamaño original de cada número (y de su punto en el nivel 1), para reducirlo al ampliar. */
+  const tamanos: { texto: SVGTextElement; punto: SVGCircleElement | null; tam: number }[] = [];
   const zonaDeCamino = new Map<Element, Zona>();
 
   for (const z of dibujo.zonas) {
@@ -96,14 +98,10 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
       const texto = svg('text', { x, y, 'font-size': tam, 'text-anchor': 'middle', 'dominant-baseline': 'central' });
       texto.textContent = String(numero.get(z.color));
       // Nivel 1: el número va dentro de un punto de su color, para quien aún no reconoce bien los números.
-      const etiqueta = modoPuntos
-        ? svg(
-            'g',
-            {},
-            svg('circle', { cx: x, cy: y, r: tam * 0.9, fill: hex, stroke: COLOR_LINEA, 'stroke-width': 1.5 }),
-            (texto.setAttribute('fill', textoSobre(hex)), texto),
-          )
-        : texto;
+      const punto = modoPuntos ? svg('circle', { cx: x, cy: y, r: tam * 0.9, fill: hex, stroke: COLOR_LINEA, 'stroke-width': 1.5 }) : null;
+      if (punto) texto.setAttribute('fill', textoSobre(hex));
+      const etiqueta = punto ? svg('g', {}, punto, texto) : texto;
+      tamanos.push({ texto, punto, tam });
       etiquetas.set(z.id, etiqueta);
       capaEtiquetas.append(etiqueta);
     }
@@ -339,6 +337,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
 
   // ---------- Zoom y desplazamiento (opcional) ----------
   let escala = 1;
+  let reduccionAplicada = 1;
   let tx = 0;
   let ty = 0;
 
@@ -367,7 +366,16 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     const menos = Math.pow(escala, 0.75);
     capaZonas.setAttribute('stroke-width', String(GROSOR_LINEA / menos));
     trama.setAttribute('patternTransform', `rotate(45) scale(${1 / menos})`);
-    capaEtiquetas.style.setProperty('--reduccion', String(1 / Math.pow(escala, 0.5)));
+    // Se cambia el tamaño de letra y no una transformación: Safari calcula mal el centro de las
+    // transformaciones CSS en los textos SVG y los números se salían de sus zonas.
+    const reduccion = 1 / Math.pow(escala, 0.5);
+    if (reduccion !== reduccionAplicada) {
+      reduccionAplicada = reduccion;
+      for (const { texto, punto, tam } of tamanos) {
+        texto.setAttribute('font-size', String(tam * reduccion));
+        punto?.setAttribute('r', String(tam * 0.9 * reduccion));
+      }
+    }
     capaEtiquetas.classList.toggle('grande', escala > 1.5);
   }
 
