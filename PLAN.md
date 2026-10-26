@@ -9,14 +9,14 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 |---|---|
 | Tecnología | TypeScript + Vite. Web instalable y Capacitor para App Store y Google Play |
 | Edades | 3–10 años, por niveles. Un perfil por niño (animal + edad) |
-| Niveles | 1 (3–5 años): puntos de color, solo zonas grandes. 2 (6–7): números y más zonas. 3 (8–10): todas las zonas |
+| Niveles | 1 (3–5 años): números dentro de un punto de su color, solo zonas grandes. 2 (6–7): números y más zonas. 3 (8–10): todas las zonas |
 | Subir de nivel | Automático tras 3 dibujos seguidos terminados con 2 fallos o menos |
 | Idiomas | Español + inglés |
 | Dibujos | Generados con IA y retocados, a través de la herramienta de dibujos (fase 1) |
 | Dispositivos | Tablet y móvil, en vertical y horizontal |
 | Datos | Solo en el dispositivo. Sin servidor ni analítica de terceros |
 | Enfoque | Diversión y creatividad. El aprendizaje formal está en nuestra otra app, Bosque de letras |
-| Voz guía | Nivel 1 dice el color ("rojo"), nivel 2 el número ("dos"), nivel 3 sin voz. Suena al elegir color, al fallar y con la varita |
+| Voz guía | Nivel 1 dice número y color ("uno, rojo"), nivel 2 el número ("dos"), nivel 3 sin voz. Suena al elegir color, al fallar y con la varita |
 | Otras apps | Apps independientes. Sección "Más apps gratis" en la portada, detrás de la prueba para padres (`src/masApps.ts`) |
 | Padres | Prueba para adultos (una multiplicación) antes de borrar perfiles y, más adelante, antes de los ajustes y los enlaces externos |
 

@@ -17,7 +17,7 @@ const ICONO_VARITA =
 const TOLERANCIA = [8, 16, 24];
 const MOVIMIENTO_MAX_TOQUE = 12;
 const ZOOM_MAX = 4;
-/** Hasta qué nivel una voz guía diciendo el número (o el color, en el nivel 1). */
+/** Hasta qué nivel una voz guía diciendo el número (y el color, en el nivel 1). */
 const NIVEL_MAX_VOZ = 2;
 
 export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo, alSalir: () => void) {
@@ -27,7 +27,8 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   const colores = [...new Set(jugables.map((z) => z.color))].sort((a, b) => a - b);
   const numero = new Map(colores.map((c, i) => [c, i + 1]));
   const tamBase = Math.round(dibujo.ancho / 24);
-  const nombreFicha = (c: number) => (modoPuntos ? nombreColor(dibujo.paleta[c]) : nombreNumero(numero.get(c)!));
+  const nombreFicha = (c: number) =>
+    modoPuntos ? `${nombreNumero(numero.get(c)!)}, ${nombreColor(dibujo.paleta[c])}` : nombreNumero(numero.get(c)!);
   const guiar = (c: number) => nivel <= NIVEL_MAX_VOZ && decir(nombreFicha(c));
 
   const progreso = cargarProgreso(perfil.id, dibujo, nivel);
@@ -69,10 +70,18 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     if (z.nivel <= nivel) {
       const [x, y] = z.etiqueta;
       const tam = z.tam ?? tamBase;
+      const hex = dibujo.paleta[z.color];
+      const texto = svg('text', { x, y, 'font-size': tam, 'text-anchor': 'middle', 'dominant-baseline': 'central' });
+      texto.textContent = String(numero.get(z.color));
+      // Nivel 1: el número va dentro de un punto de su color, para quien aún no reconoce bien los números.
       const etiqueta = modoPuntos
-        ? svg('circle', { cx: x, cy: y, r: tam * 0.55, fill: dibujo.paleta[z.color], stroke: COLOR_LINEA, 'stroke-width': 1.5 })
-        : svg('text', { x, y, 'font-size': tam, 'text-anchor': 'middle', 'dominant-baseline': 'central' });
-      if (!modoPuntos) etiqueta.textContent = String(numero.get(z.color));
+        ? svg(
+            'g',
+            {},
+            svg('circle', { cx: x, cy: y, r: tam * 0.9, fill: hex, stroke: COLOR_LINEA, 'stroke-width': 1.5 }),
+            (texto.setAttribute('fill', textoSobre(hex)), texto),
+          )
+        : texto;
       etiquetas.set(z.id, etiqueta);
       capaEtiquetas.append(etiqueta);
     }
@@ -104,7 +113,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     ficha.setAttribute('aria-label', nombreFicha(c));
     ficha.innerHTML =
       `<svg class="anillo" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20" pathLength="100"/></svg>` +
-      `<span class="numero">${modoPuntos ? '' : numero.get(c)}</span><span class="hecho">✓</span>`;
+      `<span class="numero">${numero.get(c)}</span><span class="hecho">✓</span>`;
     ficha.addEventListener('click', () => seleccionar(c));
     fichas.set(c, ficha);
     paleta.append(ficha);
