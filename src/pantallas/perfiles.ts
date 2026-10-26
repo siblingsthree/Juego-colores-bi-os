@@ -48,6 +48,7 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
         lista,
         modoPadres ? bloqueAjustes(raiz, dibujar) : null,
         el('div', { class: 'pie' }, padres, masApps),
+        el('p', { class: 'version' }, `v ${__VERSION__}`),
       ),
     );
   }
