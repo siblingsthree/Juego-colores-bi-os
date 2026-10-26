@@ -3,7 +3,7 @@ import { el } from '../dom';
 import { cambiarIdioma, idiomaActual, t } from '../i18n';
 import { miniatura } from '../miniatura';
 import type { Perfil } from '../perfiles';
-import { cargarProgreso } from '../progreso';
+import { cargarProgreso, zonasJugables } from '../progreso';
 import { alternarSonido, sonidoActivo } from '../sonido';
 import type { Dibujo } from '../tipos';
 
@@ -32,7 +32,7 @@ export function pantallaBiblioteca(
       'button',
       { class: 'tarjeta', type: 'button' },
       miniatura(d, perfil.nivel, progreso.orden),
-      progreso.terminado ? el('span', { class: 'sello' }, '⭐') : null,
+      zonasJugables(d, perfil.nivel).every((z) => progreso.orden.includes(z.id)) ? el('span', { class: 'sello' }, '⭐') : null,
       el('span', { class: 'nombre' }, d.nombre[idiomaActual()]),
     );
     tarjeta.addEventListener('click', () => alElegir(d));

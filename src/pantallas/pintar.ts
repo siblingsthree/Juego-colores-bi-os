@@ -32,7 +32,10 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   const guiar = (c: number) => nivel <= NIVEL_MAX_VOZ && decir(nombreFicha(c));
 
   const progreso = cargarProgreso(perfil.id, dibujo, nivel);
+  // Si el dibujo ha cambiado desde que se guardó, el progreso se ajusta a sus zonas actuales.
+  progreso.orden = progreso.orden.filter((id) => jugables.some((z) => z.id === id));
   const pintadas = new Set(progreso.orden);
+  progreso.terminado = jugables.every((z) => pintadas.has(z.id));
   const restantes = (color: number) => jugables.filter((z) => z.color === color && !pintadas.has(z.id));
   const totalDe = (color: number) => jugables.filter((z) => z.color === color).length;
 

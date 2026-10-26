@@ -1,3 +1,4 @@
+import { dibujos } from './dibujos';
 import { idiomaActual } from './i18n';
 import { pantallaBiblioteca } from './pantallas/biblioteca';
 import { pantallaPerfiles } from './pantallas/perfiles';
@@ -15,5 +16,8 @@ function inicio() {
 function biblioteca(perfil: Perfil) {
   pantallaBiblioteca(raiz, perfil, (d) => pantallaPintar(raiz, perfil, d, () => biblioteca(perfil)), inicio);
 }
+
+// Acceso para scripts/comprobar-zonas.cjs.
+(window as unknown as { __colorines: unknown }).__colorines = { dibujos };
 
 inicio();

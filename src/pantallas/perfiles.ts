@@ -1,6 +1,7 @@
 import { el } from '../dom';
 import { t } from '../i18n';
-import { AVATARES, EDADES, borrarPerfil, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
+import { AVATARES, EDADES, actualizarPerfil, borrarPerfil, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
+import type { Nivel } from '../tipos';
 import { panelMasApps } from './masApps';
 import { puertaPadres } from './padres';
 
@@ -20,7 +21,16 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
           borrarPerfil(p);
           dibujar();
         });
-        tarjeta.append(borrar);
+        const niveles = el('div', { class: 'elegir-nivel' });
+        for (const n of [1, 2, 3] as Nivel[]) {
+          const b = el('button', { class: n === p.nivel ? 'activo' : '', type: 'button', ariaLabel: `${t('nivel')} ${n}` }, '★'.repeat(n));
+          b.addEventListener('click', () => {
+            actualizarPerfil({ ...p, nivel: n, racha: 0 });
+            dibujar();
+          });
+          niveles.append(b);
+        }
+        tarjeta.append(borrar, niveles);
       }
       lista.append(tarjeta);
     }

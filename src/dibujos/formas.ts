@@ -20,3 +20,9 @@ export function estrella(cx: number, cy: number, rExt: number, rInt: number, pun
   }
   return poligono(...p);
 }
+
+/** Alturas (arriba y abajo) del contorno de una elipse en la vertical x. */
+export function bordeElipse(cx: number, cy: number, rx: number, ry: number, x: number): [number, number] {
+  const dy = ry * Math.sqrt(1 - ((x - cx) / rx) ** 2);
+  return [+(cy - dy).toFixed(1), +(cy + dy).toFixed(1)];
+}

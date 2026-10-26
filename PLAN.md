@@ -9,7 +9,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 |---|---|
 | Tecnología | TypeScript + Vite. Web instalable y Capacitor para App Store y Google Play |
 | Edades | 3–10 años, por niveles. Un perfil por niño (animal + edad) |
-| Niveles | 1 (3–5 años): números dentro de un punto de su color, solo zonas grandes. 2 (6–7): números y más zonas. 3 (8–10): todas las zonas |
+| Niveles | 1 (3–4 años): números dentro de un punto de su color, solo zonas grandes. 2 (5–6): más zonas. 3 (7–10): todas las zonas. Es solo el nivel inicial: los padres lo cambian en "Para padres" |
 | Subir de nivel | Automático tras 3 dibujos seguidos terminados con 2 fallos o menos |
 | Idiomas | Español + inglés |
 | Dibujos | Generados con IA y retocados, a través de la herramienta de dibujos (fase 1) |
@@ -40,6 +40,7 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 
 - `nivel` es el nivel mínimo en el que la zona se pinta. En niveles inferiores aparece ya pintada. Así un mismo dibujo sirve para los 3 niveles.
 - `etiqueta` es el punto donde va el número o el punto de color.
+- **Regla**: cada zona tiene que verse como **un solo trozo**. Si una forma queda partida por otra que va encima (por ejemplo, el cuerpo de un pez cortado por sus rayas), cada trozo debe ser una zona distinta. `npm run comprobar` lo verifica en todos los dibujos y avisa también de las zonas que quedan totalmente tapadas.
 
 ## Fases
 

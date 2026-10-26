@@ -18,7 +18,8 @@ export const EDADES = [3, 4, 5, 6, 7, 8, 9, 10];
 const FALLOS_PERMITIDOS = 2;
 const RACHA_PARA_SUBIR = 3;
 
-export const nivelPorEdad = (edad: number): Nivel => (edad <= 5 ? 1 : edad <= 7 ? 2 : 3);
+/** Nivel inicial; los padres pueden cambiarlo y el juego lo sube solo. */
+export const nivelPorEdad = (edad: number): Nivel => (edad <= 4 ? 1 : edad <= 6 ? 2 : 3);
 
 export const listarPerfiles = () => leer<Perfil[]>('perfiles', []);
 
