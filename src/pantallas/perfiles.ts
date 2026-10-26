@@ -1,7 +1,7 @@
 import { el } from '../dom';
 import { t } from '../i18n';
-import { AVATARES, EDADES, actualizarPerfil, borrarPerfil, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
-import { NIVELES } from '../tipos';
+import { AVATARES, EDADES, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
+import { bloqueAjustes, pantallaEditarPerfil } from './ajustes';
 import { panelMasApps } from './masApps';
 import { puertaPadres } from './padres';
 
@@ -13,25 +13,10 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
     const lista = el('div', { class: 'perfiles' });
     for (const p of perfiles) {
       const boton = el('button', { class: 'perfil', type: 'button' }, el('span', { class: 'avatar' }, p.avatar), el('span', { class: 'estrellas' }, '★'.repeat(p.nivel)));
-      boton.addEventListener('click', () => (modoPadres ? undefined : alElegir(p)));
+      // En modo padres, tocar un perfil abre su edición en lugar de empezar a jugar.
+      boton.addEventListener('click', () => (modoPadres ? pantallaEditarPerfil(raiz, p, dibujar) : alElegir(p)));
       const tarjeta = el('div', { class: 'tarjeta-perfil' }, boton);
-      if (modoPadres) {
-        const borrar = el('button', { class: 'borrar', type: 'button', ariaLabel: t('borrarPerfil') }, '✕');
-        borrar.addEventListener('click', () => {
-          borrarPerfil(p);
-          dibujar();
-        });
-        const niveles = el('div', { class: 'elegir-nivel' });
-        for (const n of NIVELES) {
-          const b = el('button', { class: n === p.nivel ? 'activo' : '', type: 'button', ariaLabel: `${t('nivel')} ${n}` }, '★'.repeat(n));
-          b.addEventListener('click', () => {
-            actualizarPerfil({ ...p, nivel: n, racha: 0 });
-            dibujar();
-          });
-          niveles.append(b);
-        }
-        tarjeta.append(borrar, niveles);
-      }
+      if (modoPadres) tarjeta.append(el('span', { class: 'lapiz', ariaLabel: t('editar') }, '✎'));
       lista.append(tarjeta);
     }
     const nuevo = el('button', { class: 'perfil nuevo', type: 'button' }, el('span', { class: 'avatar' }, '+'), el('span', {}, t('nuevo')));
@@ -60,6 +45,7 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
         el('h1', { class: 'logo' }, t('titulo')),
         el('h2', {}, t('quienJuega')),
         lista,
+        modoPadres ? bloqueAjustes(raiz, dibujar) : null,
         el('div', { class: 'pie' }, padres, masApps),
       ),
     );

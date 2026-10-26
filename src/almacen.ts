@@ -27,3 +27,12 @@ export function borrar(clave: string): void {
     /* sin almacenamiento */
   }
 }
+
+/** Borra todo lo que guarda el juego (perfiles, progreso y preferencias). */
+export function borrarTodo(): void {
+  try {
+    for (const clave of Object.keys(localStorage)) if (clave.startsWith(PREFIJO)) localStorage.removeItem(clave);
+  } catch {
+    /* sin almacenamiento */
+  }
+}

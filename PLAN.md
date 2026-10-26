@@ -18,7 +18,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 | Enfoque | Diversión y creatividad. El aprendizaje formal está en nuestra otra app, Bosque de letras |
 | Voz guía | Nivel 1 dice número y color ("uno, rojo"), nivel 2 el número ("dos"), nivel 3 sin voz. Suena al elegir color, al fallar y con la varita |
 | Otras apps | Apps independientes. Sección "Más apps gratis" en la portada, detrás de la prueba para padres (`src/masApps.ts`) |
-| Padres | Prueba para adultos (una multiplicación) antes de borrar perfiles y, más adelante, antes de los ajustes y los enlaces externos |
+| Padres | "Para padres" (tras una multiplicación): editar cada perfil (animal, edad, nivel, borrar sus dibujos, borrar perfil), idioma, sonido y voz, y restablecer la aplicación. "Más apps gratis" también va detrás de la multiplicación |
 
 ## Cómo funciona el juego
 
@@ -50,6 +50,18 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 | Tortuga | 5+ | 5 / 21 / 32 / 40 |
 | Mariposa | 7+ | 8 / 19 / 37 / 53 |
 | Mandala | 10+ | 7 / 24 / 62 / 90 |
+
+## Fuentes de dibujos libres
+
+Comprobadas (accesibles desde GitHub y con licencia que permite usarlas en una app gratuita):
+
+| Fuente | Licencia | Qué aporta |
+|---|---|---|
+| Fluent Emoji de Microsoft (estilo *Flat*) | MIT | ~1.500 dibujos planos de 4–20 formas. Ideal para 3–6 años |
+| Twemoji (`jdecked/twemoji`) | CC BY 4.0: hay que citar la autoría | ~3.700 dibujos planos sencillos |
+| OpenMoji | CC BY-SA 4.0: citar y compartir igual | Dibujos con contorno negro, parecidos a una ficha de colorear |
+
+Para los niveles 3–4 hacen falta dibujos con mucho más detalle. Son candidatas Openclipart (dominio público) y la categoría de libros para colorear de Wikimedia Commons, pero hay que revisar la licencia de cada dibujo. Desde este entorno no se pueden descargar: hay que bajarlos a mano.
 
 ## Fases
 

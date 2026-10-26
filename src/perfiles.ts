@@ -54,3 +54,8 @@ export function registrarDibujoTerminado(perfil: Perfil, fallos: number): boolea
   actualizarPerfil(perfil);
   return sube;
 }
+
+/** Deja todos los dibujos del perfil sin pintar. */
+export function borrarProgreso(perfil: Perfil) {
+  borrar(`progreso:${perfil.id}`);
+}
