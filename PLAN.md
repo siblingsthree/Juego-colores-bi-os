@@ -17,6 +17,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 | Datos | Solo en el dispositivo. Sin servidor ni analítica de terceros |
 | Enfoque | Diversión y creatividad. El aprendizaje formal está en nuestra otra app, Bosque de letras |
 | Voz guía | Nivel 1 dice el color ("rojo"), nivel 2 el número ("dos"), nivel 3 sin voz. Suena al elegir color, al fallar y con la varita |
+| Otras apps | Apps independientes. Sección "Más apps gratis" en la portada, detrás de la prueba para padres (`src/masApps.ts`) |
 | Padres | Prueba para adultos (una multiplicación) antes de borrar perfiles y, más adelante, antes de los ajustes y los enlaces externos |
 
 ## Cómo funciona el juego
@@ -52,7 +53,6 @@ Las zonas se definen en `src/dibujos/*.ts`, en orden de pintado (las posteriores
 
 ## Pendiente de decidir
 
-- Si Colorines comparte personajes y estilo visual con Bosque de letras.
 - Voces grabadas en lugar de la voz del sistema. En la WebView de Android la voz del sistema no suele estar disponible y hará falta un plugin de Capacitor (text-to-speech) o audios grabados.
 - Nombre definitivo.
 - Estilo visual de los dibujos (definir una guía antes de generar con IA).

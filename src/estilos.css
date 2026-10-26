@@ -507,3 +507,57 @@ h2 {
   font-size: 20px;
   font-weight: 700;
 }
+
+/* ---------- Más apps ---------- */
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+}
+.dialogo.apps {
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.lista-apps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.app {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: var(--fondo);
+  color: inherit;
+  text-decoration: none;
+  text-align: left;
+}
+.icono-app {
+  font-size: 40px;
+  line-height: 1;
+}
+.texto-app {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.texto-app strong {
+  font-size: 18px;
+}
+.ir {
+  font-size: 30px;
+  color: var(--acento);
+}
+.pronto {
+  font-size: 13px;
+  color: var(--suave);
+}

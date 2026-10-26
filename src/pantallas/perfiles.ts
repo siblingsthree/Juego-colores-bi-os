@@ -1,6 +1,7 @@
 import { el } from '../dom';
 import { t } from '../i18n';
 import { AVATARES, EDADES, borrarPerfil, crearPerfil, listarPerfiles, type Perfil } from '../perfiles';
+import { panelMasApps } from './masApps';
 import { puertaPadres } from './padres';
 
 export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => void) {
@@ -39,8 +40,18 @@ export function pantallaPerfiles(raiz: HTMLElement, alElegir: (p: Perfil) => voi
       });
     });
 
+    const masApps = el('button', { class: 'enlace-padres', type: 'button' }, t('masApps'));
+    masApps.addEventListener('click', () => puertaPadres(raiz, () => panelMasApps(raiz)));
+
     raiz.replaceChildren(
-      el('main', { class: 'portada' }, el('h1', { class: 'logo' }, t('titulo')), el('h2', {}, t('quienJuega')), lista, padres),
+      el(
+        'main',
+        { class: 'portada' },
+        el('h1', { class: 'logo' }, t('titulo')),
+        el('h2', {}, t('quienJuega')),
+        lista,
+        el('div', { class: 'pie' }, padres, masApps),
+      ),
     );
   }
 

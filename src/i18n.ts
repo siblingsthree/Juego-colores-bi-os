@@ -21,6 +21,8 @@ const textos = {
     paraPadres: 'Para padres',
     preguntaPadres: 'Para adultos: ¿cuánto es',
     cancelar: 'Cancelar',
+    masApps: 'Más apps gratis',
+    pronto: 'Muy pronto',
   },
   en: {
     titulo: 'Colorines',
@@ -41,6 +43,8 @@ const textos = {
     paraPadres: 'For parents',
     preguntaPadres: 'For grown-ups: what is',
     cancelar: 'Cancel',
+    masApps: 'More free apps',
+    pronto: 'Coming soon',
   },
 } satisfies Record<Idioma, Record<string, string>>;
 
