@@ -266,21 +266,16 @@ h2 {
 .lienzo {
   position: relative;
   min-height: 0;
-  padding: 8px 16px;
   touch-action: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  container-type: size;
 }
-/* Ocupa todo el hueco disponible sin deformar el dibujo (--proporcion = ancho / alto). */
+/* Ocupa todo el hueco entre la cabecera y la paleta; el dibujo se ajusta dentro y se amplía sobre todo él. */
 .lamina {
-  width: min(100cqw, 100cqh * var(--proporcion, 1));
-  height: min(100cqh, 100cqw / var(--proporcion, 1));
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: var(--sombra);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  display: block;
 }
 .zona {
   transform-box: fill-box;
@@ -307,6 +302,11 @@ h2 {
   font-weight: 800;
   fill: #4a4652;
   transition: opacity 0.3s;
+}
+.etiquetas > * {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(var(--reduccion, 1));
 }
 .etiquetas .oculta,
 .etiquetas.oculta {

@@ -29,6 +29,7 @@ Gratis para los niños: sin anuncios, sin compras, sin cuentas y sin recoger dat
 5. **Varita mágica ilimitada**: hace latir las zonas que faltan.
 6. Al terminar: confeti, una estrella, la repetición de cómo se pintó el dibujo y la opción de pintarlo otra vez.
 7. El progreso se guarda en cada toque.
+8. **Lienzo a pantalla completa**: el dibujo empieza ajustado y se amplía (hasta ×6, con dos dedos) sobre toda la zona entre la cabecera y la paleta. Al ampliar, las líneas, las rayas y los números crecen mucho menos que el dibujo.
 
 ## Formato de un dibujo
 

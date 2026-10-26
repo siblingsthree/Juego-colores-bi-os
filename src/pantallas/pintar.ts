@@ -19,7 +19,9 @@ const ICONO_VARITA =
  */
 const TOLERANCIA = { 1: [5, 10], 2: [3, 6], 3: [3, 6], 4: [3, 6] } as const;
 const MOVIMIENTO_MAX_TOQUE = 12;
-const ZOOM_MAX = 4;
+const ZOOM_MAX = 6;
+/** Margen alrededor del dibujo sin zoom, en fracción de su ancho. */
+const MARGEN = 0.025;
 /** Color de las rayas que marcan las zonas por pintar, y el que se usa si el color elegido es rojizo. */
 const RAYA = '#e0202e';
 const RAYA_ALTERNATIVA = '#1d5fd6';
@@ -62,7 +64,15 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   const capaZonas = svg('g');
   const capaEtiquetas = svg('g', { class: 'etiquetas' });
   const camara = svg('g', {}, capaZonas, capaEtiquetas);
-  const lamina = svg('svg', { viewBox: `0 0 ${dibujo.ancho} ${dibujo.alto}`, class: 'lamina' }, defs, camara);
+  // La lámina ocupa todo el hueco entre la cabecera y la paleta; el dibujo empieza centrado
+  // con un pequeño margen y, al ampliarlo, puede llenar la pantalla entera.
+  const margen = dibujo.ancho * MARGEN;
+  const lamina = svg(
+    'svg',
+    { viewBox: `${-margen} ${-margen} ${dibujo.ancho + 2 * margen} ${dibujo.alto + 2 * margen}`, class: 'lamina' },
+    defs,
+    camara,
+  );
 
   const caminos = new Map<string, SVGPathElement>();
   const etiquetas = new Map<string, SVGElement>();
@@ -73,7 +83,6 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     const camino = svg('path', {
       d: z.d,
       stroke: COLOR_LINEA,
-      'stroke-width': GROSOR_LINEA,
       'stroke-linejoin': 'round',
       class: 'zona',
     });
@@ -151,7 +160,6 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   }
 
   // ---------- Pantalla ----------
-  lamina.style.setProperty('--proporcion', String(dibujo.ancho / dibujo.alto));
   const lienzo = el('div', { class: 'lienzo' }, lamina);
   const botonVolver = el('button', { class: 'redondo', type: 'button', innerHTML: ICONO_VOLVER, ariaLabel: t('volver') });
   const botonPista = el('button', { class: 'redondo pista', type: 'button', innerHTML: ICONO_VARITA, ariaLabel: t('pista') });
@@ -334,10 +342,32 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   let tx = 0;
   let ty = 0;
 
+  /** Parte de la lámina que se ve en pantalla, en coordenadas del dibujo. */
+  function zonaVisible() {
+    const ctm = lamina.getScreenCTM();
+    const r = lamina.getBoundingClientRect();
+    if (!ctm || !r.width) return { x0: 0, y0: 0, x1: dibujo.ancho, y1: dibujo.alto };
+    const inv = ctm.inverse();
+    const a = new DOMPoint(r.left, r.top).matrixTransform(inv);
+    const b = new DOMPoint(r.right, r.bottom).matrixTransform(inv);
+    return { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
+  }
+
+  /** Si el dibujo ampliado no cabe, no se puede alejar del borde; si cabe, queda centrado. */
+  const encajar = (t: number, tamano: number, desde: number, hasta: number) =>
+    tamano > hasta - desde ? Math.min(desde, Math.max(hasta - tamano, t)) : (desde + hasta - tamano) / 2;
+
   function aplicarCamara() {
-    tx = Math.min(0, Math.max(dibujo.ancho * (1 - escala), tx));
-    ty = Math.min(0, Math.max(dibujo.alto * (1 - escala), ty));
+    const v = zonaVisible();
+    tx = encajar(tx, dibujo.ancho * escala, v.x0, v.x1);
+    ty = encajar(ty, dibujo.alto * escala, v.y0, v.y1);
     camara.setAttribute('transform', `translate(${tx} ${ty}) scale(${escala})`);
+    // Las líneas, las rayas de las zonas por pintar y los números crecen mucho menos que el dibujo
+    // al ampliar: si no, con zoom ×6 las líneas tapan las zonas pequeñas y los números no caben.
+    const menos = Math.pow(escala, 0.75);
+    capaZonas.setAttribute('stroke-width', String(GROSOR_LINEA / menos));
+    trama.setAttribute('patternTransform', `rotate(45) scale(${1 / menos})`);
+    capaEtiquetas.style.setProperty('--reduccion', String(1 / Math.pow(escala, 0.5)));
     capaEtiquetas.classList.toggle('grande', escala > 1.5);
   }
 
@@ -421,4 +451,8 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     ty += dy / ctm.d / dedos;
     aplicarCamara();
   }
+
+  // Al final: usa las variables del zoom, que se declaran más arriba.
+  aplicarCamara();
+  new ResizeObserver(() => aplicarCamara()).observe(lienzo);
 }
