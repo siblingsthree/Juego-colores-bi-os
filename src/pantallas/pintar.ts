@@ -338,6 +338,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   // ---------- Zoom y desplazamiento (opcional) ----------
   let escala = 1;
   let reduccionAplicada = 1;
+  let finuraAplicada = 1;
   let tx = 0;
   let ty = 0;
 
@@ -365,7 +366,14 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
     // al ampliar: si no, con zoom ×6 las líneas tapan las zonas pequeñas y los números no caben.
     const menos = Math.pow(escala, 0.75);
     capaZonas.setAttribute('stroke-width', String(GROSOR_LINEA / menos));
-    trama.setAttribute('patternTransform', `rotate(45) scale(${1 / menos})`);
+    // Las rayas van pegadas al dibujo y solo se afinan a saltos de ×2: si se encogieran de forma
+    // continua, se deslizarían por las zonas mientras se amplía (marea). Con saltos de ×2, las rayas
+    // que había se quedan en su sitio y aparecen otras nuevas entre ellas.
+    const finura = 2 ** Math.round(Math.log2(menos));
+    if (finura !== finuraAplicada) {
+      finuraAplicada = finura;
+      trama.setAttribute('patternTransform', `rotate(45) scale(${1 / finura})`);
+    }
     // Se cambia el tamaño de letra y no una transformación: Safari calcula mal el centro de las
     // transformaciones CSS en los textos SVG y los números se salían de sus zonas.
     const reduccion = 1 / Math.pow(escala, 0.5);
