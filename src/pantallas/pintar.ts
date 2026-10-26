@@ -1,5 +1,5 @@
 import { lanzarConfeti } from '../confeti';
-import { aclarar, el, svg, textoSobre } from '../dom';
+import { aclarar, el, esRojizo, svg, textoSobre } from '../dom';
 import { t } from '../i18n';
 import { COLOR_LINEA, GROSOR_LINEA } from '../miniatura';
 import { registrarDibujoTerminado, type Perfil } from '../perfiles';
@@ -20,6 +20,9 @@ const ICONO_VARITA =
 const TOLERANCIA = { 1: [5, 10], 2: [3, 6], 3: [3, 6], 4: [3, 6] } as const;
 const MOVIMIENTO_MAX_TOQUE = 12;
 const ZOOM_MAX = 4;
+/** Color de las rayas que marcan las zonas por pintar, y el que se usa si el color elegido es rojizo. */
+const RAYA = '#e0202e';
+const RAYA_ALTERNATIVA = '#1d5fd6';
 /** Hasta qué nivel una voz guía diciendo el número (y el color, en el nivel 1). */
 const NIVEL_MAX_VOZ = 2;
 
@@ -45,14 +48,15 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
   let seleccionado = colores.find((c) => restantes(c).length > 0) ?? colores[0];
 
   // ---------- Dibujo ----------
-  // Zonas que faltan del color elegido: fondo teñido con ese color y rayas oscuras de contraste,
-  // que se ven igual sobre colores claros y entre zonas ya pintadas de tonos parecidos.
+  // Zonas que faltan del color elegido: fondo teñido con ese color y rayas rojas bien visibles
+  // (azules si el color elegido ya es rojizo, para que no se confundan con el fondo).
   const fondoTrama = svg('rect', { width: 12, height: 12 });
+  const rayaTrama = svg('rect', { width: 4, height: 12, 'fill-opacity': 0.8 });
   const trama = svg(
     'pattern',
     { id: 'trama', width: 12, height: 12, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' },
     fondoTrama,
-    svg('rect', { width: 4, height: 12, fill: COLOR_LINEA, 'fill-opacity': 0.45 }),
+    rayaTrama,
   );
   const defs = svg('defs', {}, trama);
   const capaZonas = svg('g');
@@ -107,6 +111,7 @@ export function pantallaPintar(raiz: HTMLElement, perfil: Perfil, dibujo: Dibujo
 
   function refrescarDibujo() {
     fondoTrama.setAttribute('fill', aclarar(dibujo.paleta[seleccionado], 0.45));
+    rayaTrama.setAttribute('fill', esRojizo(dibujo.paleta[seleccionado]) ? RAYA_ALTERNATIVA : RAYA);
     dibujo.zonas.forEach(colorearZona);
   }
 

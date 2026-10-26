@@ -39,3 +39,17 @@ export function aclarar(hex: string, k: number) {
   const canal = (v: number) => Math.round(v + (255 - v) * k).toString(16).padStart(2, '0');
   return '#' + canal((n >> 16) & 255) + canal((n >> 8) & 255) + canal(n & 255);
 }
+
+/** Rojos, rosas y naranjas con algo de saturación: con ellos no se distinguirían unas rayas rojas. */
+export function esRojizo(hex: string) {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255);
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  if (max - min < 0.25) return false; // grises y colores apagados
+  let tono = 0;
+  if (max === r) tono = ((g - b) / (max - min) + 6) % 6;
+  else if (max === g) tono = (b - r) / (max - min) + 2;
+  else tono = (r - g) / (max - min) + 4;
+  const grados = tono * 60;
+  return grados < 40 || grados > 300;
+}
